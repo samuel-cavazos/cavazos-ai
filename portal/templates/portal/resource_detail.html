@@ -1,0 +1,579 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ resource.name }} | {{ project.name }} | cavazos.ai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-1: #070b14;
+        --bg-2: #061423;
+        --ink: #dbe8ff;
+        --muted: #9ab0d2;
+        --line: rgba(162, 195, 255, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(100rem 70rem at 120% -20%, rgba(24, 152, 255, 0.2), transparent 60%),
+          radial-gradient(90rem 60rem at -15% 100%, rgba(15, 89, 144, 0.28), transparent 55%),
+          linear-gradient(145deg, var(--bg-1), var(--bg-2));
+        color: var(--ink);
+        font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .page {
+        width: min(1080px, 94vw);
+        margin: 0 auto;
+        padding: 1.2rem 0 2rem;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.7rem;
+        margin-bottom: 1.1rem;
+      }
+
+      .brand {
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        font-size: 1.1rem;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: linear-gradient(165deg, rgba(11, 22, 39, 0.92), rgba(8, 16, 30, 0.72));
+        padding: 1rem;
+      }
+
+      .panel + .panel {
+        margin-top: 0.85rem;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.42rem;
+        font-size: 0.76rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #9bc8ff;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 999px;
+        background: radial-gradient(circle at 35% 35%, #bdf2ff, #2cb4f0);
+        box-shadow: 0 0 16px rgba(41, 194, 245, 0.62);
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        margin: 0;
+      }
+
+      h1 {
+        margin-top: 0.58rem;
+        font-size: clamp(1.4rem, 2.7vw, 2rem);
+      }
+
+      h2 {
+        font-size: 1.03rem;
+      }
+
+      .lede {
+        margin: 0.55rem 0 0;
+        color: var(--muted);
+      }
+
+      .btn,
+      .nav-link {
+        border-radius: 0.72rem;
+        border: 1px solid transparent;
+        text-decoration: none;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.86rem;
+        font-weight: 600;
+        padding: 0.52rem 0.78rem;
+      }
+
+      .btn-primary {
+        color: #041625;
+        background: linear-gradient(150deg, #98f0ff, #4ecff4 58%, #2f9fce);
+        border-color: rgba(170, 238, 255, 0.75);
+      }
+
+      .btn-secondary,
+      .nav-link {
+        color: var(--ink);
+        border-color: var(--line);
+        background: rgba(9, 24, 43, 0.68);
+      }
+
+      .actions {
+        margin-top: 0.7rem;
+        display: flex;
+        align-items: center;
+        gap: 0.52rem;
+        flex-wrap: wrap;
+      }
+
+      .messages {
+        list-style: none;
+        margin: 0 0 0.9rem;
+        padding: 0;
+        display: grid;
+        gap: 0.45rem;
+      }
+
+      .message {
+        border: 1px solid rgba(143, 173, 217, 0.32);
+        border-radius: 0.64rem;
+        background: rgba(10, 25, 45, 0.72);
+        color: #d8e8ff;
+        font-size: 0.83rem;
+        padding: 0.5rem 0.62rem;
+      }
+
+      .message.error {
+        border-color: rgba(252, 165, 165, 0.35);
+        background: rgba(69, 10, 10, 0.44);
+        color: #fecaca;
+      }
+
+      .message.success {
+        border-color: rgba(134, 239, 172, 0.35);
+        background: rgba(6, 52, 26, 0.46);
+        color: #bbf7d0;
+      }
+
+      .meta-grid {
+        margin-top: 0.7rem;
+        display: grid;
+        gap: 0.55rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .meta-row {
+        border: 1px solid rgba(162, 195, 255, 0.22);
+        border-radius: 0.68rem;
+        background: rgba(9, 23, 42, 0.62);
+        padding: 0.56rem 0.64rem;
+      }
+
+      .meta-label {
+        color: #9bc8ff;
+        font-size: 0.74rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .meta-value {
+        margin-top: 0.22rem;
+        font-size: 0.9rem;
+        overflow-wrap: anywhere;
+      }
+
+      .json-block {
+        margin: 0;
+        border: 1px solid rgba(162, 195, 255, 0.24);
+        border-radius: 0.72rem;
+        background: rgba(5, 11, 20, 0.8);
+        color: #d5e4fc;
+        font-size: 0.78rem;
+        line-height: 1.48;
+        padding: 0.68rem;
+        overflow: auto;
+      }
+
+      code {
+        border: 1px solid rgba(162, 195, 255, 0.22);
+        border-radius: 0.48rem;
+        background: rgba(5, 11, 20, 0.72);
+        padding: 0.12rem 0.34rem;
+        font-size: 0.78rem;
+      }
+
+      .form-grid {
+        display: grid;
+        gap: 0.58rem;
+        margin-top: 0.62rem;
+      }
+
+      label {
+        display: grid;
+        gap: 0.3rem;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
+      input[type="text"] {
+        width: 100%;
+        border-radius: 0.68rem;
+        border: 1px solid rgba(162, 195, 255, 0.24);
+        background: rgba(7, 16, 29, 0.78);
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.9rem;
+        padding: 0.52rem 0.62rem;
+      }
+
+      .key-list {
+        list-style: none;
+        margin: 0.7rem 0 0;
+        padding: 0;
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .key-item {
+        border: 1px solid rgba(162, 195, 255, 0.22);
+        border-radius: 0.7rem;
+        background: rgba(9, 23, 42, 0.58);
+        padding: 0.58rem 0.66rem;
+      }
+
+      .key-item-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .key-meta {
+        margin-top: 0.25rem;
+        color: var(--muted);
+        font-size: 0.77rem;
+      }
+
+      .copy-url-row {
+        margin-top: 0.6rem;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .copy-url-box {
+        border: 1px solid rgba(162, 195, 255, 0.24);
+        border-radius: 0.68rem;
+        background: rgba(5, 11, 20, 0.8);
+        padding: 0.52rem 0.62rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+      }
+
+      .copy-url-box code {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font-size: 0.8rem;
+      }
+
+      @media (max-width: 760px) {
+        .meta-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <div class="brand">cavazos.ai</div>
+        <div class="header-actions">
+          <a class="nav-link" href="{% url 'portal:home' %}">Projects</a>
+          <form action="{% url 'portal:ajax-logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-secondary" type="submit">Logout</button>
+          </form>
+        </div>
+      </header>
+
+      {% if messages %}
+      <ul class="messages" aria-label="Status messages">
+        {% for message in messages %}
+        <li class="message {{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <main>
+        <section class="panel">
+          <span class="eyebrow">Resource Detail</span>
+          <h1>{{ resource.name }}</h1>
+          <p class="lede">Project: {{ project.name }} · Type: {{ resource.resource_type|upper }} · Slug: {{ resource.slug }}</p>
+          <div class="actions">
+            <a class="nav-link" href="{% url 'portal:project-overview' project_slug=project.slug %}">Back to {{ project.name }}</a>
+            {% if user.is_superuser %}
+            <form
+              action="{% url 'portal:project-resource-delete' project_uuid=project.uuid resource_uuid=resource.uuid %}"
+              method="post"
+              onsubmit="return confirm('Delete this resource?');"
+            >
+              {% csrf_token %}
+              <button class="btn btn-secondary" type="submit">Delete Resource</button>
+            </form>
+            {% endif %}
+          </div>
+          {% if user.is_superuser %}
+          <form
+            class="form-grid"
+            action="{% url 'portal:resource-settings-update' project_uuid=project.uuid resource_uuid=resource.uuid %}"
+            method="post"
+            style="margin-top: 0.8rem"
+          >
+            {% csrf_token %}
+            <label>
+              Resource Slug
+              <input type="text" name="slug" value="{{ resource.slug }}" required maxlength="180" placeholder="resource-slug" />
+            </label>
+            <div class="actions" style="margin-top: 0.55rem">
+              <button class="btn btn-primary" type="submit">Save Slug</button>
+            </div>
+          </form>
+          {% endif %}
+        </section>
+
+        {% if user.is_superuser %}
+        <section class="panel">
+          <h2>Resource API Keys</h2>
+          <p class="lede">Use these keys to send logs to this endpoint:</p>
+          <div class="copy-url-row">
+            <div class="copy-url-box" aria-label="Resource log ingest URL">
+              <code id="resourceLogIngestUrl">{{ resource_log_ingest_url }}</code>
+            </div>
+            <button class="btn btn-secondary" id="copyResourceLogIngestUrlBtn" type="button">Copy URL</button>
+          </div>
+
+          {% if new_resource_api_key %}
+          <div class="message success" style="margin-top: 0.65rem">
+            New key <strong>{{ new_resource_api_key.name }}</strong> (shown once):
+            <code>{{ new_resource_api_key.value }}</code>
+          </div>
+          {% endif %}
+
+          <form
+            class="form-grid"
+            action="{% url 'portal:resource-api-key-create' project_uuid=project.uuid resource_uuid=resource.uuid %}"
+            method="post"
+          >
+            {% csrf_token %}
+            <label>
+              API Key Name
+              <input type="text" name="name" maxlength="120" required placeholder="vm-agent-prod" />
+            </label>
+            <div class="actions">
+              <button class="btn btn-primary" type="submit">Create API Key</button>
+            </div>
+          </form>
+
+          {% if resource_api_keys %}
+          <ul class="key-list" aria-label="Resource API keys">
+            {% for api_key in resource_api_keys %}
+            <li class="key-item">
+              <div class="key-item-row">
+                <div>
+                  <strong>{{ api_key.name }}</strong>
+                  <code>{{ api_key.key_prefix }}...</code>
+                </div>
+                {% if api_key.is_active %}
+                <form
+                  action="{% url 'portal:resource-api-key-revoke' project_uuid=project.uuid resource_uuid=resource.uuid key_id=api_key.key_id %}"
+                  method="post"
+                  onsubmit="return confirm('Revoke this API key?');"
+                >
+                  {% csrf_token %}
+                  <button class="btn btn-secondary" type="submit">Revoke</button>
+                </form>
+                {% else %}
+                <span class="meta-label" style="color: #fca5a5">Revoked</span>
+                {% endif %}
+              </div>
+              <div class="key-meta">
+                Created {{ api_key.created_at|default:"-" }}{% if api_key.created_by %} by {{ api_key.created_by }}{% endif %}
+                · Last used {{ api_key.last_used_at|default:"never" }}
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="lede" style="margin-top: 0.55rem">No API keys created yet.</p>
+          {% endif %}
+        </section>
+        {% endif %}
+
+        <section class="panel">
+          <h2>Global Resource Record (Django DB)</h2>
+          <div class="meta-grid">
+            <div class="meta-row">
+              <div class="meta-label">Target</div>
+              <div class="meta-value">{{ resource.target }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">Address</div>
+              <div class="meta-value">{{ resource.address|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">Port</div>
+              <div class="meta-value">{{ resource.port|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">DB Type</div>
+              <div class="meta-value">{{ resource.db_type|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">Healthcheck URL</div>
+              <div class="meta-value">{{ resource.healthcheck_url|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">Access Scope</div>
+              <div class="meta-value">{{ resource.access_scope }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">GitHub Repositories</div>
+              <div class="meta-value">{{ resource.github_repositories|join:", "|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">SSH Mode</div>
+              <div class="meta-value">{{ resource.ssh_mode|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">SSH Username</div>
+              <div class="meta-value">{{ resource.ssh_username|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">SSH Port</div>
+              <div class="meta-value">{{ resource.ssh_port|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">SSH Credential ID</div>
+              <div class="meta-value">{{ resource.ssh_credential_id|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">SSH Credential Scope</div>
+              <div class="meta-value">{{ resource.ssh_credential_scope|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">SSH Key Name</div>
+              <div class="meta-value">{{ resource.ssh_key_name|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">Created By</div>
+              <div class="meta-value">{{ resource.created_by|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">Updated</div>
+              <div class="meta-value">{{ resource.updated_at|date:"Y-m-d H:i" }}</div>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 0.9rem">Notes</h3>
+          <p class="lede" style="white-space: pre-wrap; margin-top: 0.45rem">{{ resource.notes|default:"-" }}</p>
+
+          <h3 style="margin-top: 0.9rem">Resource Metadata</h3>
+          <pre class="json-block" style="margin-top: 0.45rem">{{ resource.resource_metadata }}</pre>
+        </section>
+
+        <section class="panel">
+          <h2>Project-Level Mirror Record (SQLite)</h2>
+          {% if project_record %}
+          <div class="meta-grid">
+            <div class="meta-row">
+              <div class="meta-label">Mirror Row ID</div>
+              <div class="meta-value">{{ project_record.id }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">Global Resource ID</div>
+              <div class="meta-value">{{ project_record.global_resource_id }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">Created At</div>
+              <div class="meta-value">{{ project_record.created_at|default:"-" }}</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-label">Updated At</div>
+              <div class="meta-value">{{ project_record.updated_at|default:"-" }}</div>
+            </div>
+          </div>
+          <h3 style="margin-top: 0.9rem">Mirror Metadata JSON</h3>
+          {% if project_record_metadata %}
+          <pre class="json-block" style="margin-top: 0.45rem">{{ project_record_metadata }}</pre>
+          {% else %}
+          <pre class="json-block" style="margin-top: 0.45rem">{{ project_record.metadata_json }}</pre>
+          {% endif %}
+          {% else %}
+          <p class="lede" style="margin-top: 0.6rem">No mirrored row found in the project database yet.</p>
+          {% endif %}
+        </section>
+      </main>
+    </div>
+    <script>
+      (() => {
+        const copyButton = document.getElementById("copyResourceLogIngestUrlBtn");
+        const urlNode = document.getElementById("resourceLogIngestUrl");
+        if (!copyButton || !urlNode) return;
+
+        const urlValue = String(urlNode.textContent || "").trim();
+        if (!urlValue) return;
+
+        copyButton.addEventListener("click", async () => {
+          const originalText = copyButton.textContent;
+          try {
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+              await navigator.clipboard.writeText(urlValue);
+            } else {
+              throw new Error("clipboard-unavailable");
+            }
+            copyButton.textContent = "Copied";
+          } catch (_error) {
+            const range = document.createRange();
+            range.selectNodeContents(urlNode);
+            const selection = window.getSelection();
+            selection?.removeAllRanges();
+            selection?.addRange(range);
+            try {
+              document.execCommand("copy");
+              copyButton.textContent = "Copied";
+            } finally {
+              selection?.removeAllRanges();
+            }
+          }
+
+          window.setTimeout(() => {
+            copyButton.textContent = originalText;
+          }, 1400);
+        });
+      })();
+    </script>
+    {% include "portal/includes/assistant_widget.html" %}
+  </body>
+</html>

@@ -1,0 +1,40 @@
+services:
+  cavazos-ai:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    command: /bin/sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000 --noreload"
+    environment:
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "127.0.0.1,localhost"
+      DJANGO_SITE_ID: "1"
+      DJANGO_DB_PATH: "/data/db.sqlite3"
+    ports:
+      - "5173:8000"
+    volumes:
+      - ../data:/data
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../cavazos_ai
+          target: /app/cavazos_ai
+          ignore:
+            - __pycache__/
+            - "*.pyc"
+        - action: sync+restart
+          path: ../portal
+          target: /app/portal
+          ignore:
+            - __pycache__/
+            - "*.pyc"
+            - migrations/__pycache__/
+        - action: sync+restart
+          path: ../orb-chat-ui
+          target: /app/orb-chat-ui
+        - action: sync+restart
+          path: ../manage.py
+          target: /app/manage.py
+        - action: rebuild
+          path: ../requirements.txt
+        - action: rebuild
+          path: ../Dockerfile

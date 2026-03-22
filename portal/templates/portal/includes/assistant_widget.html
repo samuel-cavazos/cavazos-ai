@@ -1,0 +1,1914 @@
+{# Shared floating assistant widget include used site-wide. #}
+<style>
+      .assistant-widget {
+        position: fixed;
+        right: clamp(2.1rem, 3.8vw, 2.7rem);
+        bottom: clamp(2rem, 3.8vw, 2.55rem);
+        z-index: 55;
+        display: grid;
+        justify-items: start;
+        gap: 0.7rem;
+        overflow: visible;
+        pointer-events: none;
+      }
+
+      .assistant-widget-launcher {
+        width: 4.3rem;
+        height: 4.3rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 999px;
+        padding: 0;
+        background: transparent;
+        overflow: visible;
+        cursor: pointer;
+        pointer-events: auto;
+        transition: transform 220ms ease, filter 220ms ease, opacity 220ms ease;
+      }
+
+      .assistant-widget-launcher:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.06);
+      }
+
+      .assistant-widget[data-open="true"] .assistant-widget-launcher {
+        opacity: 0;
+        transform: scale(0.8);
+        pointer-events: none;
+      }
+
+      .assistant-widget-launcher:focus-visible {
+        outline: 2px solid rgba(145, 212, 255, 0.5);
+        outline-offset: 2px;
+      }
+
+      .assistant-widget-orb {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 999px;
+        position: relative;
+        overflow: visible;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .assistant-widget-orb-canvas {
+        position: absolute;
+        inset: -8%;
+        pointer-events: none;
+      }
+
+      .assistant-widget-orb-canvas canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        filter: saturate(1.12);
+      }
+
+      .assistant-widget-panel {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: min(92vw, 30rem);
+        height: min(74vh, 41rem);
+        border: 1px solid var(--line, rgba(162, 195, 255, 0.22));
+        border-radius: 1.08rem;
+        background: linear-gradient(
+          172deg,
+          var(--panel-bg-1, rgba(11, 22, 39, 0.94)),
+          var(--panel-bg-2, rgba(8, 16, 30, 0.86))
+        );
+        box-shadow: 0 28px 64px rgba(1, 7, 15, 0.62);
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        transform-origin: top left;
+        opacity: 0;
+        transform: scale(0.94);
+        pointer-events: none;
+        transition:
+          border-radius 420ms ease,
+          opacity 260ms ease,
+          transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+          filter 420ms ease;
+      }
+
+      .assistant-widget[data-open="true"] .assistant-widget-panel {
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: auto;
+      }
+
+      .assistant-widget-panel[hidden] {
+        display: none !important;
+        pointer-events: none !important;
+      }
+
+      .assistant-widget-panel.is-maximized {
+        left: 0 !important;
+        top: 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+        border-radius: 0 !important;
+      }
+
+      .assistant-widget-panel.is-mobile {
+        border-radius: 0;
+        min-width: 100vw;
+        min-height: 100dvh;
+        max-width: 100vw;
+        max-height: 100dvh;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+      }
+
+      .assistant-widget-panel.is-mobile .assistant-widget-head {
+        cursor: default;
+      }
+
+      .assistant-widget-panel.is-mobile #assistantWidgetMaximize {
+        display: none;
+      }
+
+      .assistant-widget-panel.is-mobile .assistant-widget-resize-handle {
+        display: none;
+      }
+
+      .assistant-widget-panel.is-interacting {
+        transition: none !important;
+      }
+
+      .assistant-widget-panel.is-morphing {
+        pointer-events: none;
+      }
+
+      body.assistant-chat-scroll-lock {
+        overflow: hidden;
+      }
+
+      .assistant-widget-head {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0.52rem;
+        border-bottom: 1px solid var(--line, rgba(162, 195, 255, 0.22));
+        padding: 0.34rem 0.62rem;
+        user-select: none;
+        cursor: grab;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent),
+          linear-gradient(180deg, rgba(20, 36, 58, 0.08), rgba(20, 36, 58, 0.01));
+      }
+
+      .assistant-widget-head.is-dragging {
+        cursor: grabbing;
+      }
+
+      .assistant-widget-window-controls {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-shrink: 0;
+      }
+
+      .assistant-widget-window-dot {
+        width: 0.86rem;
+        height: 0.86rem;
+        border-radius: 999px;
+        border: 1px solid rgba(15, 23, 42, 0.25);
+        cursor: pointer;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .assistant-widget-window-dot.is-red {
+        background: linear-gradient(180deg, #ff6a64, #e53935);
+      }
+
+      .assistant-widget-window-dot.is-green {
+        background: linear-gradient(180deg, #65e27f, #27ae60);
+      }
+
+      .assistant-widget-window-dot.is-trash {
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        opacity: 0.95;
+      }
+
+      .assistant-widget-window-dot.is-trash svg {
+        width: 0.86rem;
+        height: 0.86rem;
+        fill: none;
+        stroke: #ff5b57;
+        stroke-width: 1.95;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        pointer-events: none;
+      }
+
+      .assistant-widget-window-dot.is-trash:hover {
+        opacity: 1;
+        transform: translateY(-0.5px);
+      }
+
+      .assistant-widget-window-dot:focus-visible {
+        outline: 2px solid rgba(145, 212, 255, 0.55);
+        outline-offset: 2px;
+      }
+
+      .assistant-widget-window-spacer {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .assistant-widget-window-tools {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        flex-shrink: 0;
+      }
+
+      .assistant-widget-status-live {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .assistant-widget-resize-handle {
+        position: absolute;
+        z-index: 7;
+      }
+
+      .assistant-widget-resize-handle.is-n,
+      .assistant-widget-resize-handle.is-s {
+        left: 0.8rem;
+        right: 0.8rem;
+        height: 0.56rem;
+      }
+
+      .assistant-widget-resize-handle.is-n {
+        top: -0.3rem;
+        cursor: n-resize;
+      }
+
+      .assistant-widget-resize-handle.is-s {
+        bottom: -0.3rem;
+        cursor: s-resize;
+      }
+
+      .assistant-widget-resize-handle.is-e,
+      .assistant-widget-resize-handle.is-w {
+        top: 0.8rem;
+        bottom: 0.8rem;
+        width: 0.56rem;
+      }
+
+      .assistant-widget-resize-handle.is-e {
+        right: -0.3rem;
+        cursor: e-resize;
+      }
+
+      .assistant-widget-resize-handle.is-w {
+        left: -0.3rem;
+        cursor: w-resize;
+      }
+
+      .assistant-widget-resize-handle.is-ne,
+      .assistant-widget-resize-handle.is-nw,
+      .assistant-widget-resize-handle.is-se,
+      .assistant-widget-resize-handle.is-sw {
+        width: 0.82rem;
+        height: 0.82rem;
+      }
+
+      .assistant-widget-resize-handle.is-ne {
+        top: -0.34rem;
+        right: -0.34rem;
+        cursor: ne-resize;
+      }
+
+      .assistant-widget-resize-handle.is-nw {
+        top: -0.34rem;
+        left: -0.34rem;
+        cursor: nw-resize;
+      }
+
+      .assistant-widget-resize-handle.is-se {
+        bottom: -0.34rem;
+        right: -0.34rem;
+        cursor: se-resize;
+      }
+
+      .assistant-widget-resize-handle.is-sw {
+        bottom: -0.34rem;
+        left: -0.34rem;
+        cursor: sw-resize;
+      }
+
+      .assistant-widget-messages {
+        min-height: 0;
+        overflow: auto;
+        display: grid;
+        align-content: start;
+        gap: 0.72rem;
+        padding: 0.78rem;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(164, 191, 218, 0.52) rgba(5, 13, 23, 0.3);
+      }
+
+      .assistant-widget-message {
+        display: grid;
+        gap: 0.28rem;
+      }
+
+      .assistant-widget-message-meta {
+        margin: 0;
+        font-size: 0.69rem;
+        color: #8ea8c4;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .assistant-widget-bubble {
+        border-radius: 0.86rem;
+        border: 1px solid var(--line, rgba(162, 195, 255, 0.22));
+        background: var(--field-bg, rgba(8, 20, 35, 0.82));
+        color: var(--field-ink, #e8f2ff);
+        font-size: 0.86rem;
+        line-height: 1.52;
+        padding: 0.68rem 0.74rem;
+      }
+
+      .assistant-widget-message.is-user {
+        justify-items: end;
+      }
+
+      .assistant-widget-message.is-user .assistant-widget-message-meta {
+        color: #c9b28f;
+      }
+
+      .assistant-widget-message.is-user .assistant-widget-bubble {
+        border-color: rgba(214, 170, 104, 0.42);
+        background: rgba(255, 244, 225, 0.88);
+        color: #8a4b0f;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .assistant-widget-message.is-user .assistant-widget-bubble {
+          border-color: rgba(214, 170, 104, 0.34);
+          background: rgba(52, 31, 10, 0.72);
+          color: #f3dfc1;
+        }
+      }
+
+      :root[data-theme="dark"] .assistant-widget-message.is-user .assistant-widget-bubble,
+      html.dark .assistant-widget-message.is-user .assistant-widget-bubble {
+        border-color: rgba(214, 170, 104, 0.34);
+        background: rgba(52, 31, 10, 0.72);
+        color: #f3dfc1;
+      }
+
+      .assistant-widget-message.is-error .assistant-widget-bubble {
+        border-color: rgba(252, 165, 165, 0.36);
+        background: rgba(69, 10, 10, 0.48);
+        color: #fecaca;
+      }
+
+      .assistant-widget-markdown > *:first-child {
+        margin-top: 0;
+      }
+
+      .assistant-widget-markdown > *:last-child {
+        margin-bottom: 0;
+      }
+
+      .assistant-widget-markdown p,
+      .assistant-widget-markdown ul,
+      .assistant-widget-markdown ol,
+      .assistant-widget-markdown pre,
+      .assistant-widget-markdown blockquote {
+        margin: 0.5rem 0;
+      }
+
+      .assistant-widget-markdown code {
+        border-radius: 0.34rem;
+        background: rgba(8, 20, 35, 0.84);
+        color: #e8f3ff;
+        padding: 0.12rem 0.28rem;
+        font-size: 0.8em;
+      }
+
+      .assistant-widget-markdown pre code {
+        display: block;
+        overflow: auto;
+        border-radius: 0.62rem;
+        border: 1px solid rgba(173, 201, 224, 0.2);
+        background: rgba(7, 17, 30, 0.9);
+        color: #e8f3ff;
+        padding: 0.6rem 0.68rem;
+      }
+
+      .assistant-widget-markdown blockquote {
+        border-left: 2px solid rgba(210, 170, 108, 0.58);
+        padding-left: 0.6rem;
+        color: #bfd2e8;
+      }
+
+      .assistant-widget-markdown table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+      }
+
+      .assistant-widget-markdown th,
+      .assistant-widget-markdown td {
+        border: 1px solid rgba(173, 201, 224, 0.24);
+        padding: 0.34rem 0.42rem;
+        text-align: left;
+      }
+
+      .assistant-widget-mermaid {
+        border-radius: 0.7rem;
+        border: 1px solid rgba(173, 201, 224, 0.22);
+        background: rgba(7, 17, 30, 0.8);
+        overflow: auto;
+        padding: 0.5rem;
+      }
+
+      .assistant-widget-mermaid svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .assistant-widget-mermaid.is-error {
+        border-color: rgba(252, 165, 165, 0.36);
+        color: #fecaca;
+      }
+
+      .assistant-widget-compose {
+        border-top: 1px solid rgba(173, 201, 224, 0.22);
+        padding: 0.68rem 0.78rem;
+      }
+
+      .assistant-widget-form {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.55rem;
+      }
+
+      .assistant-widget-input {
+        min-width: 0;
+        max-height: 7rem;
+        resize: vertical;
+        border: 1px solid rgba(173, 201, 224, 0.28);
+        border-radius: 0.74rem;
+        background: rgba(8, 20, 35, 0.82);
+        color: #e8f2ff;
+        padding: 0.52rem 0.62rem;
+        font: inherit;
+        font-size: 0.85rem;
+        line-height: 1.45;
+      }
+
+      .assistant-widget-input:focus {
+        outline: 2px solid rgba(145, 212, 255, 0.34);
+        border-color: rgba(145, 212, 255, 0.52);
+      }
+
+      .assistant-widget-send {
+        align-self: end;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.55rem;
+        height: 2.55rem;
+        border-radius: 0.74rem;
+        border: 1px solid rgba(173, 201, 224, 0.44);
+        background: linear-gradient(150deg, rgba(121, 206, 255, 0.42), rgba(40, 119, 171, 0.78));
+        color: #ecf7ff;
+        cursor: pointer;
+        box-shadow: 0 12px 22px rgba(15, 76, 116, 0.36);
+      }
+
+      .assistant-widget-send:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+      }
+
+      .assistant-widget-send:disabled {
+        opacity: 0.66;
+        cursor: default;
+        transform: none;
+      }
+
+      .assistant-widget-send svg {
+        width: 1.08rem;
+        height: 1.08rem;
+      }
+
+      @media (max-width: 640px) {
+        .assistant-widget {
+          right: 0.9rem;
+          bottom: 0.9rem;
+        }
+
+        .assistant-widget-panel {
+          width: 100vw;
+          height: 100dvh;
+          border-radius: 0;
+          min-width: 100vw;
+          min-height: 100dvh;
+        }
+      }
+</style>
+      <div class="assistant-widget" id="assistantWidget" data-open="false" data-agent-profile="{% if request.user.is_authenticated %}{% if request.user.is_superuser %}superuser{% else %}client_staff{% endif %}{% else %}guest{% endif %}">
+        <button
+          id="assistantWidgetLauncher"
+          class="assistant-widget-launcher"
+          type="button"
+          aria-expanded="false"
+          aria-controls="assistantWidgetPanel"
+          aria-label="Open assistant chat"
+        >
+          <span class="assistant-widget-orb" aria-hidden="true">
+            <span id="assistantWidgetOrbCanvas" class="assistant-widget-orb-canvas"></span>
+          </span>
+        </button>
+
+        <section
+          id="assistantWidgetPanel"
+          class="assistant-widget-panel"
+          aria-label="Assistant widget panel"
+          hidden
+        >
+          <header class="assistant-widget-head" id="assistantWidgetDragHandle">
+            <div class="assistant-widget-window-controls" aria-label="Window controls">
+              <button
+                id="assistantWidgetClose"
+                class="assistant-widget-window-dot is-red"
+                type="button"
+                aria-label="Close assistant"
+                title="Close"
+              ></button>
+              <button
+                id="assistantWidgetMaximize"
+                class="assistant-widget-window-dot is-green"
+                type="button"
+                aria-label="Maximize assistant"
+                title="Maximize"
+              ></button>
+            </div>
+            <span class="assistant-widget-window-spacer" aria-hidden="true"></span>
+            <div class="assistant-widget-window-tools">
+              <button
+                id="assistantWidgetClear"
+                class="assistant-widget-window-dot is-trash"
+                type="button"
+                aria-label="Clear conversation"
+                title="Clear conversation"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M4 7h16" />
+                  <path d="M9.5 7V5.6A1.6 1.6 0 0 1 11.1 4h1.8a1.6 1.6 0 0 1 1.6 1.6V7" />
+                  <path d="M8 7l.8 11.2a1.8 1.8 0 0 0 1.8 1.7h2.8a1.8 1.8 0 0 0 1.8-1.7L16 7" />
+                  <path d="M10.5 10.1v6.6" />
+                  <path d="M13.5 10.1v6.6" />
+                </svg>
+              </button>
+            </div>
+          </header>
+          <p id="assistantWidgetStatus" class="assistant-widget-status-live" aria-live="polite">
+            Preview mode. Connect your backend handler.
+          </p>
+
+          <div id="assistantWidgetMessages" class="assistant-widget-messages" role="log" aria-live="polite"></div>
+
+          <div class="assistant-widget-compose">
+            <form id="assistantWidgetForm" class="assistant-widget-form" autocomplete="off">
+              <textarea
+                id="assistantWidgetInput"
+                class="assistant-widget-input"
+                rows="2"
+                maxlength="4000"
+                placeholder="Ask Beast..."
+                aria-label="Assistant input"
+              ></textarea>
+              <button id="assistantWidgetSend" class="assistant-widget-send" type="submit" aria-label="Send">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M3.4 3.52a1 1 0 0 1 1.08-.2l15.96 6.98a1.2 1.2 0 0 1 0 2.2L4.48 19.48a1 1 0 0 1-1.38-1.06l1.27-5.6a1 1 0 0 1 .74-.75l7.5-1.82l-7.5-1.82a1 1 0 0 1-.74-.75z"
+                  />
+                </svg>
+              </button>
+            </form>
+          </div>
+
+          <span class="assistant-widget-resize-handle is-n" data-resize="n" aria-hidden="true"></span>
+          <span class="assistant-widget-resize-handle is-e" data-resize="e" aria-hidden="true"></span>
+          <span class="assistant-widget-resize-handle is-s" data-resize="s" aria-hidden="true"></span>
+          <span class="assistant-widget-resize-handle is-w" data-resize="w" aria-hidden="true"></span>
+          <span class="assistant-widget-resize-handle is-ne" data-resize="ne" aria-hidden="true"></span>
+          <span class="assistant-widget-resize-handle is-nw" data-resize="nw" aria-hidden="true"></span>
+          <span class="assistant-widget-resize-handle is-se" data-resize="se" aria-hidden="true"></span>
+          <span class="assistant-widget-resize-handle is-sw" data-resize="sw" aria-hidden="true"></span>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+      (() => {
+        const widget = document.getElementById("assistantWidget");
+        const launcher = document.getElementById("assistantWidgetLauncher");
+        const panel = document.getElementById("assistantWidgetPanel");
+        const closeButton = document.getElementById("assistantWidgetClose");
+        const maximizeButton = document.getElementById("assistantWidgetMaximize");
+        const clearButton = document.getElementById("assistantWidgetClear");
+        const dragHandle = document.getElementById("assistantWidgetDragHandle");
+        const statusElement = document.getElementById("assistantWidgetStatus");
+        const messagesElement = document.getElementById("assistantWidgetMessages");
+        const form = document.getElementById("assistantWidgetForm");
+        const input = document.getElementById("assistantWidgetInput");
+        const sendButton = document.getElementById("assistantWidgetSend");
+        const resizeHandles = Array.from(document.querySelectorAll("[data-resize]"));
+
+        if (
+          !widget ||
+          !launcher ||
+          !panel ||
+          !closeButton ||
+          !maximizeButton ||
+          !clearButton ||
+          !dragHandle ||
+          !statusElement ||
+          !messagesElement ||
+          !form ||
+          !input ||
+          !sendButton
+        ) {
+          return;
+        }
+
+        const orbCanvasHost = document.getElementById("assistantWidgetOrbCanvas");
+        initializeLauncherOrb({ host: orbCanvasHost, trigger: launcher });
+
+        function initializeLauncherOrb({ host, trigger }) {
+          if (!host || !trigger) return null;
+
+          let disposed = false;
+          let animationFrameId = 0;
+          let resizeObserver = null;
+          let three = null;
+          let scene = null;
+          let camera = null;
+          let renderer = null;
+          let mesh = null;
+          let material = null;
+          let clock = null;
+          let mouseThrottleTime = 0;
+          const lastPointerPosition = { x: 0, y: 0 };
+
+          const colorPreset = {
+            color1: [0.98, 0.56, 0.16],
+            color2: [0.18, 0.7, 1.0],
+            color3: [0.53, 0.32, 0.98],
+          };
+
+          const settings = {
+            animationSpeed: 1.25,
+            waterStrength: 0.8,
+            mouseIntensity: 2.1,
+            clickIntensity: 4.2,
+            impactForce: 62000,
+            rippleSize: 0.12,
+          };
+
+          const waterSettings = {
+            resolution: 128,
+            damping: 0.913,
+            tension: 0.02,
+            rippleRadius: 7,
+          };
+
+          const resolution = waterSettings.resolution;
+          const waterBuffers = {
+            current: new Float32Array(resolution * resolution),
+            previous: new Float32Array(resolution * resolution),
+          };
+
+          const vertexShader = `
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `;
+
+          const fragmentShader = `
+            uniform float u_time;
+            uniform vec2 u_resolution;
+            uniform vec3 u_color1;
+            uniform vec3 u_color2;
+            uniform vec3 u_color3;
+            uniform float u_speed;
+            uniform sampler2D u_waterTexture;
+            uniform float u_waterStrength;
+
+            varying vec2 vUv;
+
+            const float PHI = 1.61803398875;
+
+            mat3 rotateX(float a) {
+              float c = cos(a);
+              float s = sin(a);
+              return mat3(
+                1.0, 0.0, 0.0,
+                0.0, c, -s,
+                0.0, s, c
+              );
+            }
+
+            mat3 rotateY(float a) {
+              float c = cos(a);
+              float s = sin(a);
+              return mat3(
+                c, 0.0, s,
+                0.0, 1.0, 0.0,
+                -s, 0.0, c
+              );
+            }
+
+            mat3 rotateZ(float a) {
+              float c = cos(a);
+              float s = sin(a);
+              return mat3(
+                c, -s, 0.0,
+                s, c, 0.0,
+                0.0, 0.0, 1.0
+              );
+            }
+
+            vec3 icosaVertex(int i) {
+              if (i == 0) return normalize(vec3(0.0, 1.0, PHI));
+              if (i == 1) return normalize(vec3(0.0, -1.0, PHI));
+              if (i == 2) return normalize(vec3(0.0, 1.0, -PHI));
+              if (i == 3) return normalize(vec3(0.0, -1.0, -PHI));
+              if (i == 4) return normalize(vec3(1.0, PHI, 0.0));
+              if (i == 5) return normalize(vec3(-1.0, PHI, 0.0));
+              if (i == 6) return normalize(vec3(1.0, -PHI, 0.0));
+              if (i == 7) return normalize(vec3(-1.0, -PHI, 0.0));
+              if (i == 8) return normalize(vec3(PHI, 0.0, 1.0));
+              if (i == 9) return normalize(vec3(PHI, 0.0, -1.0));
+              if (i == 10) return normalize(vec3(-PHI, 0.0, 1.0));
+              return normalize(vec3(-PHI, 0.0, -1.0));
+            }
+
+            void main() {
+              vec2 r = u_resolution;
+              vec2 FC = gl_FragCoord.xy;
+              vec2 screenP = (FC.xy * 2.0 - r) / max(r.y, 1.0);
+
+              vec2 wCoord = vec2(FC.x / max(r.x, 1.0), FC.y / max(r.y, 1.0));
+              float waterHeight = texture2D(u_waterTexture, wCoord).r;
+              float waterInfluence = clamp(waterHeight * u_waterStrength, -0.6, 0.6);
+
+              float distFromCenter = length(screenP);
+              vec2 radialDir = distFromCenter > 0.0001 ? screenP / distFromCenter : vec2(0.0, 1.0);
+              float t = u_time * u_speed * 0.55;
+              mat3 worldRotation =
+                rotateY(t * 0.72 + waterInfluence * 1.8) *
+                rotateX(t * 0.28 - waterInfluence * 1.15) *
+                rotateZ(t * 0.19);
+
+              float silhouetteSpike = 0.0;
+              for (int i = 0; i < 12; i++) {
+                vec3 dir = normalize(worldRotation * icosaVertex(i));
+                vec2 proj = dir.xy;
+                float projLen = length(proj);
+                if (projLen > 0.0001) {
+                  vec2 projDir = proj / projLen;
+                  float align = max(dot(radialDir, projDir), 0.0);
+                  float front = smoothstep(-0.45, 0.85, dir.z);
+                  float spike = pow(align, 32.0) * (0.22 + 0.78 * front);
+                  silhouetteSpike = max(silhouetteSpike, spike);
+                }
+              }
+
+              float baseRadius = 0.58 + waterInfluence * 0.05;
+              float spikeRadius = 0.36 + waterInfluence * 0.05;
+              float tipBoost = pow(silhouetteSpike, 1.8);
+              float boundaryRadius = baseRadius + spikeRadius * tipBoost;
+              float alphaMask = smoothstep(boundaryRadius + 0.045, boundaryRadius - 0.035, distFromCenter);
+
+              if (alphaMask <= 0.001) {
+                gl_FragColor = vec4(0.0);
+                return;
+              }
+
+              vec2 p = screenP / max(boundaryRadius, 0.0001);
+              float radialSq = dot(p, p);
+              float z = sqrt(max(1.0 - radialSq, 0.0));
+              vec3 n = normalize(vec3(p, z));
+
+              float best = -2.0;
+              float second = -2.0;
+              vec3 spikeDir = vec3(0.0, 0.0, 1.0);
+              float spikeId = 0.0;
+
+              for (int i = 0; i < 12; i++) {
+                vec3 fn = normalize(worldRotation * icosaVertex(i));
+                float d = dot(n, fn);
+                if (d > best) {
+                  second = best;
+                  best = d;
+                  spikeDir = fn;
+                  spikeId = float(i);
+                } else if (d > second) {
+                  second = d;
+                }
+              }
+
+              vec3 anchor = abs(spikeDir.y) > 0.91 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
+              vec3 tangent = normalize(cross(anchor, spikeDir));
+              vec3 bitangent = normalize(cross(spikeDir, tangent));
+              vec2 local = vec2(dot(n, tangent), dot(n, bitangent));
+              float localRadius = length(local);
+              float angle = atan(local.y, local.x);
+
+              float starArm = pow(max(cos(angle * 5.0), 0.0), 2.9);
+              float starValley = pow(max(-cos(angle * 5.0), 0.0), 1.8);
+              float dominance = smoothstep(0.32, 0.995, best);
+              float stellation =
+                clamp(pow(dominance, 1.6) * (0.5 + starArm * 1.26) - localRadius * 0.35 - starValley * 0.3, 0.0, 1.0);
+
+              float facetSeam = 1.0 - smoothstep(0.02, 0.11, best - second);
+              float pentagramRays = smoothstep(0.95, 0.999, cos(angle * 5.0));
+
+              vec3 shapeNormal = normalize(mix(n, spikeDir, stellation * 0.92));
+              vec3 lightDir = normalize(vec3(-0.43, 0.6, 0.67));
+              float diffuse = clamp(dot(shapeNormal, lightDir) * 0.5 + 0.5, 0.0, 1.0);
+              float specular = pow(max(dot(reflect(-lightDir, shapeNormal), vec3(0.0, 0.0, 1.0)), 0.0), 24.0);
+              float facing = clamp(dot(shapeNormal, vec3(0.0, 0.0, 1.0)), 0.0, 1.0);
+              float rim = pow(1.0 - facing, 2.2);
+
+              float phase = t * 1.08 + spikeId * 0.43 + waterInfluence * 6.1;
+              vec3 animatedA = mix(u_color1, u_color2, 0.5 + 0.5 * sin(phase));
+              vec3 animatedB = mix(u_color2, u_color3, 0.5 + 0.5 * sin(phase + 2.094));
+              vec3 animatedC = mix(u_color3, u_color1, 0.5 + 0.5 * sin(phase + 4.188));
+              float gradientFlow = 0.5 + 0.5 * sin(phase * 0.86 + angle * 2.2 - localRadius * 8.8 + waterInfluence * 3.1);
+              float gradientSpiral = 0.5 + 0.5 * cos(phase * 0.61 - angle * 3.4 + localRadius * 6.1);
+              float gradientPulse = 0.5 + 0.5 * sin(phase * 0.34 + localRadius * 7.4 - waterInfluence * 2.3);
+              vec3 gradientA = mix(u_color1, u_color2, gradientFlow);
+              vec3 gradientB = mix(u_color2, u_color3, gradientSpiral);
+              vec3 gradientColor = mix(gradientA, gradientB, gradientPulse);
+              vec3 hueWave = 0.5 + 0.5 * cos(vec3(0.0, 2.094, 4.188) + phase * 0.78 + angle * 2.7 - localRadius * 8.1);
+              gradientColor = mix(gradientColor, hueWave, 0.62);
+
+              vec3 stellatedColor = mix(animatedA, animatedB, diffuse);
+              stellatedColor = mix(stellatedColor, animatedC, 0.22 + 0.24 * sin(phase * 0.74));
+              stellatedColor = mix(stellatedColor, gradientColor, 0.68 + 0.2 * dominance);
+              stellatedColor *= 0.72 + 0.48 * diffuse;
+              stellatedColor = mix(stellatedColor, stellatedColor * 0.52, facetSeam * 0.48);
+              stellatedColor += pentagramRays * 0.07 * mix(u_color1, u_color2, 0.45);
+              stellatedColor += specular * 0.14 * u_color1;
+              stellatedColor += rim * 0.09 * mix(u_color1, u_color2, 0.5);
+
+              float coreMask = smoothstep(0.08, 0.95, stellation);
+              float shellBlend = smoothstep(boundaryRadius - 0.18, boundaryRadius - 0.008, distFromCenter);
+              float edgeFeather = smoothstep(boundaryRadius - 0.06, boundaryRadius + 0.015, distFromCenter);
+              vec3 shellColor = mix(vec3(0.12, 0.2, 0.3), mix(u_color1, u_color2, 0.5), 0.48);
+              shellColor *= 0.82 + 0.12 * sin(t * 0.88 + waterInfluence * 2.7);
+              vec3 shellHueWave = 0.5 + 0.5 * cos(vec3(0.0, 2.094, 4.188) + phase * 0.43 + distFromCenter * 7.0);
+              shellColor = mix(shellColor, shellHueWave, 0.26);
+
+              vec3 orbColor = mix(shellColor, stellatedColor, coreMask);
+              orbColor = mix(orbColor, shellColor, shellBlend * 0.34);
+              orbColor = mix(orbColor, shellColor * 0.94, edgeFeather * 0.72);
+              orbColor += coreMask * 0.05 * smoothstep(0.62, 0.0, localRadius) * mix(u_color2, u_color3, 0.4);
+
+              gl_FragColor = vec4(orbColor, alphaMask);
+            }
+          `;
+
+          bindEvents();
+          void initialize();
+
+          return dispose;
+
+          async function initialize() {
+            try {
+              three = await import("https://esm.sh/three@0.177.0");
+              if (disposed) return;
+              buildRenderer();
+              addCenterSplash();
+              animate();
+            } catch (error) {
+              console.error(`[assistant-widget-orb] Failed to initialize renderer: ${error?.message || error}`);
+            }
+          }
+
+          function bindEvents() {
+            trigger.addEventListener("pointerenter", onPointerEnter, { passive: true });
+            trigger.addEventListener("pointermove", onPointerMove, { passive: true });
+            trigger.addEventListener("pointerdown", onPointerDown, { passive: true });
+            trigger.addEventListener("touchmove", onTouchMove, { passive: false });
+            trigger.addEventListener("touchstart", onTouchStart, { passive: false });
+            window.addEventListener("resize", onResize);
+            window.addEventListener("beforeunload", dispose);
+
+            if (typeof ResizeObserver !== "undefined") {
+              resizeObserver = new ResizeObserver(() => {
+                onResize();
+              });
+              resizeObserver.observe(host);
+            }
+          }
+
+          function onPointerEnter(event) {
+            if (!renderer) return;
+            const rect = getCanvasRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+            addRipple(x, y, settings.clickIntensity * 0.45);
+          }
+
+          function buildRenderer() {
+            scene = new three.Scene();
+            camera = new three.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+            camera.position.z = 1;
+
+            renderer = new three.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            const { width, height } = getHostSize();
+            renderer.setSize(width, height, false);
+            renderer.setClearColor(0x000000, 0);
+            renderer.domElement.style.width = "100%";
+            renderer.domElement.style.height = "100%";
+            renderer.domElement.style.display = "block";
+            host.appendChild(renderer.domElement);
+
+            const waterTexture = new three.DataTexture(
+              waterBuffers.current,
+              waterSettings.resolution,
+              waterSettings.resolution,
+              three.RedFormat,
+              three.FloatType
+            );
+            waterTexture.minFilter = three.LinearFilter;
+            waterTexture.magFilter = three.LinearFilter;
+            waterTexture.needsUpdate = true;
+
+            material = new three.ShaderMaterial({
+              vertexShader,
+              fragmentShader,
+              transparent: true,
+              uniforms: {
+                u_time: { value: 0.0 },
+                u_resolution: { value: new three.Vector2(renderer.domElement.width, renderer.domElement.height) },
+                u_speed: { value: settings.animationSpeed },
+                u_color1: { value: new three.Vector3(...colorPreset.color1) },
+                u_color2: { value: new three.Vector3(...colorPreset.color2) },
+                u_color3: { value: new three.Vector3(...colorPreset.color3) },
+                u_waterTexture: { value: waterTexture },
+                u_waterStrength: { value: settings.waterStrength },
+              },
+            });
+
+            mesh = new three.Mesh(new three.PlaneGeometry(2, 2), material);
+            scene.add(mesh);
+            clock = new three.Clock();
+            centerLastPointerPosition();
+          }
+
+          function onPointerMove(event) {
+            if (!renderer) return;
+            const now = performance.now();
+            if (now - mouseThrottleTime < 6) return;
+            mouseThrottleTime = now;
+            const rect = getCanvasRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+            addMouseTrail(x, y);
+          }
+
+          function onTouchMove(event) {
+            if (!renderer) return;
+            const touch = event.touches[0];
+            if (!touch) return;
+            const rect = getCanvasRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+            event.preventDefault();
+            addMouseTrail(x, y);
+          }
+
+          function onPointerDown(event) {
+            if (!renderer || event.button !== 0) return;
+            const rect = getCanvasRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+            addRipple(x, y, settings.clickIntensity);
+          }
+
+          function onTouchStart(event) {
+            if (!renderer) return;
+            const touch = event.touches[0];
+            if (!touch) return;
+            const rect = getCanvasRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+            event.preventDefault();
+            addRipple(x, y, settings.clickIntensity);
+          }
+
+          function addMouseTrail(x, y) {
+            const dx = x - lastPointerPosition.x;
+            const dy = y - lastPointerPosition.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance <= 1) return;
+
+            const velocity = distance / 8;
+            const velocityInfluence = Math.min(velocity / 10, 2.0);
+            const baseIntensity = Math.min(distance / 20, 1.0);
+            const finalIntensity = baseIntensity * velocityInfluence * settings.mouseIntensity;
+            const jitterX = x + (Math.random() - 0.5) * 3;
+            const jitterY = y + (Math.random() - 0.5) * 3;
+
+            addRipple(jitterX, jitterY, finalIntensity);
+            lastPointerPosition.x = x;
+            lastPointerPosition.y = y;
+          }
+
+          function addRipple(x, y, strength = 1.0) {
+            const { resolution: gridSize, rippleRadius } = waterSettings;
+            const rect = getCanvasRect();
+            const normalizedX = x / Math.max(rect.width, 1);
+            const normalizedY = 1.0 - y / Math.max(rect.height, 1);
+            const texX = Math.floor(normalizedX * gridSize);
+            const texY = Math.floor(normalizedY * gridSize);
+            const radius = Math.max(rippleRadius, Math.floor(settings.rippleSize * gridSize));
+            const rippleStrength = strength * (settings.impactForce / 100000);
+            const radiusSquared = radius * radius;
+
+            for (let i = -radius; i <= radius; i += 1) {
+              for (let j = -radius; j <= radius; j += 1) {
+                const distanceSquared = i * i + j * j;
+                if (distanceSquared > radiusSquared) continue;
+
+                const posX = texX + i;
+                const posY = texY + j;
+                if (posX < 0 || posX >= gridSize || posY < 0 || posY >= gridSize) continue;
+
+                const index = posY * gridSize + posX;
+                const distance = Math.sqrt(distanceSquared);
+                const falloff = 1.0 - distance / Math.max(radius, 1);
+                const rippleValue =
+                  Math.cos((distance / Math.max(radius, 1)) * Math.PI * 0.5) * rippleStrength * falloff;
+                waterBuffers.previous[index] += rippleValue;
+              }
+            }
+          }
+
+          function addCenterSplash() {
+            const rect = getCanvasRect();
+            addRipple(rect.width / 2, rect.height / 2, 1.8);
+          }
+
+          function onResize() {
+            if (!renderer || !material) return;
+            const { width, height } = getHostSize();
+            renderer.setSize(width, height, false);
+            material.uniforms.u_resolution.value.set(renderer.domElement.width, renderer.domElement.height);
+            centerLastPointerPosition();
+          }
+
+          function animate() {
+            if (disposed || !renderer || !material || !clock) return;
+            animationFrameId = window.requestAnimationFrame(animate);
+            material.uniforms.u_time.value = clock.getElapsedTime();
+            updateWaterSimulation();
+            renderer.render(scene, camera);
+          }
+
+          function updateWaterSimulation() {
+            const { current, previous } = waterBuffers;
+            const { damping, resolution: gridSize } = waterSettings;
+            const safeTension = Math.min(waterSettings.tension, 0.05);
+
+            for (let i = 1; i < gridSize - 1; i += 1) {
+              for (let j = 1; j < gridSize - 1; j += 1) {
+                const index = i * gridSize + j;
+                const top = previous[index - gridSize];
+                const bottom = previous[index + gridSize];
+                const left = previous[index - 1];
+                const right = previous[index + 1];
+
+                current[index] = (top + bottom + left + right) / 2 - current[index];
+                current[index] = current[index] * damping + previous[index] * (1 - damping);
+                current[index] += (0 - previous[index]) * safeTension;
+                current[index] *= 1.0 - 0.01;
+                current[index] = Math.max(-2.0, Math.min(2.0, current[index]));
+              }
+            }
+
+            for (let i = 0; i < gridSize; i += 1) {
+              current[i] = 0;
+              current[(gridSize - 1) * gridSize + i] = 0;
+              current[i * gridSize] = 0;
+              current[i * gridSize + (gridSize - 1)] = 0;
+            }
+
+            [waterBuffers.current, waterBuffers.previous] = [waterBuffers.previous, waterBuffers.current];
+            material.uniforms.u_waterTexture.value.image.data = waterBuffers.current;
+            material.uniforms.u_waterTexture.value.needsUpdate = true;
+          }
+
+          function getHostSize() {
+            const rect = host.getBoundingClientRect();
+            return {
+              width: Math.max(1, Math.round(rect.width || host.clientWidth || 0)),
+              height: Math.max(1, Math.round(rect.height || host.clientHeight || 0)),
+            };
+          }
+
+          function getCanvasRect() {
+            if (!renderer?.domElement) return getHostSize();
+            const rect = renderer.domElement.getBoundingClientRect();
+            return {
+              left: rect.left,
+              top: rect.top,
+              width: Math.max(1, rect.width),
+              height: Math.max(1, rect.height),
+            };
+          }
+
+          function centerLastPointerPosition() {
+            const rect = getCanvasRect();
+            lastPointerPosition.x = rect.width / 2;
+            lastPointerPosition.y = rect.height / 2;
+          }
+
+          function dispose() {
+            if (disposed) return;
+            disposed = true;
+
+            if (animationFrameId) {
+              window.cancelAnimationFrame(animationFrameId);
+            }
+
+            trigger.removeEventListener("pointerenter", onPointerEnter);
+            trigger.removeEventListener("pointermove", onPointerMove);
+            trigger.removeEventListener("pointerdown", onPointerDown);
+            trigger.removeEventListener("touchmove", onTouchMove);
+            trigger.removeEventListener("touchstart", onTouchStart);
+            window.removeEventListener("resize", onResize);
+            window.removeEventListener("beforeunload", dispose);
+
+            if (resizeObserver) {
+              resizeObserver.disconnect();
+              resizeObserver = null;
+            }
+
+            if (mesh) {
+              mesh.geometry?.dispose?.();
+              mesh.material?.dispose?.();
+            }
+            renderer?.dispose?.();
+
+            if (renderer?.domElement && renderer.domElement.parentElement === host) {
+              host.removeChild(renderer.domElement);
+            }
+          }
+        }
+
+        const markdownDemo = `### Markdown is enabled
+You can use:
+
+- Bullet lists
+- **Bold** and _italic_ text
+- Tables, blockquotes, and code
+
+\`\`\`python
+def health():
+    return {"status": "ok", "latency_ms": 23}
+\`\`\`
+`;
+
+        const mermaidDemo = `### Mermaid is enabled
+\`\`\`mermaid
+flowchart TD
+  A[Client Request] --> B{Auth Valid?}
+  B -- Yes --> C[Ingest Log]
+  B -- No --> D[Return 401]
+  C --> E[Project DB]
+\`\`\`
+`;
+
+        let conversation = [];
+        let externalSubmitHandler = null;
+        let mermaidInitialized = false;
+        let mermaidRenderCounter = 0;
+        const agentProfile = String(widget.dataset.agentProfile || "guest").trim() || "guest";
+
+        if (window.marked && typeof window.marked.setOptions === "function") {
+          window.marked.setOptions({
+            gfm: true,
+            breaks: true,
+            headerIds: false,
+            mangle: false,
+          });
+        }
+
+        const setStatus = (text) => {
+          statusElement.textContent = String(text || "").trim();
+        };
+
+        const desktopQuery = window.matchMedia("(min-width: 1024px)");
+        const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const WINDOW_BOUNDS = {
+          margin: 14,
+          minWidth: 380,
+          minHeight: 420,
+          maxWidth: 920,
+          maxHeight: 860,
+        };
+        const DEFAULT_DESKTOP_SIZE = { width: 460, height: 640 };
+        const MORPH_MS = reducedMotionQuery.matches ? 160 : 560;
+        const MORPH_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+        const MORPH_TRANSITION = `transform ${MORPH_MS}ms ${MORPH_EASE}, opacity ${Math.round(
+          MORPH_MS * 0.92
+        )}ms ${MORPH_EASE}, border-radius ${MORPH_MS}ms ${MORPH_EASE}, filter ${MORPH_MS}ms ${MORPH_EASE}`;
+        let isTransitioning = false;
+        let dragState = null;
+        let resizeState = null;
+        const windowState = {
+          rect: null,
+          preMaxRect: null,
+          isMaximized: false,
+        };
+
+        const isDesktopMode = () => desktopQuery.matches;
+
+        const getViewportSize = () => ({
+          width: Math.max(320, Math.round(window.innerWidth || document.documentElement.clientWidth || 0)),
+          height: Math.max(320, Math.round(window.innerHeight || document.documentElement.clientHeight || 0)),
+        });
+
+        const getDesktopLimits = () => {
+          const viewport = getViewportSize();
+          return {
+            minWidth: WINDOW_BOUNDS.minWidth,
+            minHeight: WINDOW_BOUNDS.minHeight,
+            maxWidth: Math.max(WINDOW_BOUNDS.minWidth, Math.min(WINDOW_BOUNDS.maxWidth, viewport.width - WINDOW_BOUNDS.margin * 2)),
+            maxHeight: Math.max(
+              WINDOW_BOUNDS.minHeight,
+              Math.min(WINDOW_BOUNDS.maxHeight, viewport.height - WINDOW_BOUNDS.margin * 2)
+            ),
+          };
+        };
+
+        const clampRect = (rect) => {
+          const viewport = getViewportSize();
+          const limits = getDesktopLimits();
+          const width = Math.max(limits.minWidth, Math.min(limits.maxWidth, Math.round(rect.width)));
+          const height = Math.max(limits.minHeight, Math.min(limits.maxHeight, Math.round(rect.height)));
+          const minLeft = WINDOW_BOUNDS.margin;
+          const minTop = WINDOW_BOUNDS.margin;
+          const maxLeft = Math.max(minLeft, viewport.width - width - WINDOW_BOUNDS.margin);
+          const maxTop = Math.max(minTop, viewport.height - height - WINDOW_BOUNDS.margin);
+          const left = Math.max(minLeft, Math.min(maxLeft, Math.round(rect.left)));
+          const top = Math.max(minTop, Math.min(maxTop, Math.round(rect.top)));
+          return { left, top, width, height };
+        };
+
+        const getDefaultDesktopRect = () => {
+          const viewport = getViewportSize();
+          const limits = getDesktopLimits();
+          const width = Math.max(limits.minWidth, Math.min(limits.maxWidth, DEFAULT_DESKTOP_SIZE.width));
+          const height = Math.max(limits.minHeight, Math.min(limits.maxHeight, DEFAULT_DESKTOP_SIZE.height));
+          const anchor = launcher.getBoundingClientRect();
+          const base = {
+            left: anchor.right - width + 22,
+            top: anchor.bottom - height + 26,
+            width,
+            height,
+          };
+          return clampRect(base);
+        };
+
+        const getMaximizedRect = () => {
+          const viewport = getViewportSize();
+          return {
+            left: 0,
+            top: 0,
+            width: viewport.width,
+            height: viewport.height,
+          };
+        };
+
+        const getOrbRect = () => {
+          const rect = launcher.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height);
+          return {
+            left: rect.left + (rect.width - size) / 2,
+            top: rect.top + (rect.height - size) / 2,
+            width: size,
+            height: size,
+          };
+        };
+
+        const applyRect = (rect) => {
+          panel.style.left = `${rect.left}px`;
+          panel.style.top = `${rect.top}px`;
+          panel.style.width = `${rect.width}px`;
+          panel.style.height = `${rect.height}px`;
+          windowState.rect = { ...rect };
+        };
+
+        const readPanelRect = () => {
+          const rect = panel.getBoundingClientRect();
+          return {
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height,
+          };
+        };
+
+        const setMobileMode = (mobile) => {
+          panel.classList.toggle("is-mobile", mobile);
+          if (mobile) {
+            panel.classList.remove("is-maximized");
+          }
+          if (mobile && widget.dataset.open === "true") {
+            document.body.classList.add("assistant-chat-scroll-lock");
+          } else {
+            document.body.classList.remove("assistant-chat-scroll-lock");
+          }
+        };
+
+        const setMaximizedMode = (maximized) => {
+          panel.classList.toggle("is-maximized", Boolean(maximized));
+        };
+
+        const waitMs = (ms) =>
+          new Promise((resolve) => {
+            window.setTimeout(resolve, ms);
+          });
+
+        const nextFrame = () =>
+          new Promise((resolve) => {
+            window.requestAnimationFrame(() => {
+              window.requestAnimationFrame(resolve);
+            });
+          });
+
+        const openDesktop = async () => {
+          const target = windowState.isMaximized
+            ? getMaximizedRect()
+            : clampRect(windowState.rect || getDefaultDesktopRect());
+          const orbRect = getOrbRect();
+          const dx = orbRect.left - target.left;
+          const dy = orbRect.top - target.top;
+          const sx = Math.max(0.02, orbRect.width / Math.max(target.width, 1));
+          const sy = Math.max(0.02, orbRect.height / Math.max(target.height, 1));
+
+          setMobileMode(false);
+          setMaximizedMode(windowState.isMaximized);
+          panel.hidden = false;
+          widget.dataset.state = "opening";
+          widget.dataset.open = "true";
+          launcher.setAttribute("aria-expanded", "true");
+
+          applyRect(target);
+          panel.classList.add("is-morphing");
+          panel.style.transition = "none";
+          panel.style.willChange = "transform, opacity, border-radius, filter";
+          panel.style.opacity = reducedMotionQuery.matches ? "1" : "0.03";
+          panel.style.transform = reducedMotionQuery.matches
+            ? "translate(0px, 0px) scale(1, 1)"
+            : `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+          panel.style.borderRadius = reducedMotionQuery.matches
+            ? windowState.isMaximized
+              ? "0"
+              : "1.08rem"
+            : "999px";
+          panel.style.filter = reducedMotionQuery.matches ? "none" : "blur(9px) saturate(1.16)";
+          panel.style.pointerEvents = "auto";
+
+          await nextFrame();
+          panel.style.transition = MORPH_TRANSITION;
+          panel.style.opacity = "1";
+          panel.style.transform = "translate(0px, 0px) scale(1, 1)";
+          panel.style.borderRadius = windowState.isMaximized ? "0" : "1.08rem";
+          panel.style.filter = "blur(0px) saturate(1)";
+          await waitMs(MORPH_MS + 24);
+          panel.style.transition = "";
+          panel.style.willChange = "";
+          panel.style.filter = "";
+          panel.classList.remove("is-morphing");
+          widget.dataset.state = "open";
+        };
+
+        const openMobile = async () => {
+          setMobileMode(true);
+          panel.hidden = false;
+          widget.dataset.state = "opening";
+          widget.dataset.open = "true";
+          launcher.setAttribute("aria-expanded", "true");
+          panel.style.opacity = "0";
+          panel.style.transform = "scale(0.94)";
+          panel.style.borderRadius = "0";
+          panel.style.pointerEvents = "auto";
+          await waitMs(16);
+          panel.style.opacity = "1";
+          panel.style.transform = "scale(1)";
+          await waitMs(220);
+          widget.dataset.state = "open";
+        };
+
+        const closeDesktop = async () => {
+          windowState.rect = clampRect(readPanelRect());
+          const currentRect = { ...windowState.rect };
+          const orbRect = getOrbRect();
+          const dx = orbRect.left - currentRect.left;
+          const dy = orbRect.top - currentRect.top;
+          const sx = Math.max(0.02, orbRect.width / Math.max(currentRect.width, 1));
+          const sy = Math.max(0.02, orbRect.height / Math.max(currentRect.height, 1));
+          widget.dataset.state = "closing";
+          applyRect(currentRect);
+          panel.classList.add("is-morphing");
+          panel.style.transition = "none";
+          panel.style.willChange = "transform, opacity, border-radius, filter";
+          panel.style.opacity = "1";
+          panel.style.transform = "translate(0px, 0px) scale(1, 1)";
+          panel.style.borderRadius = windowState.isMaximized ? "0" : "1.08rem";
+          panel.style.filter = "blur(0px) saturate(1)";
+          await nextFrame();
+          panel.style.transition = MORPH_TRANSITION;
+          panel.style.opacity = reducedMotionQuery.matches ? "0" : "0.02";
+          panel.style.transform = reducedMotionQuery.matches
+            ? "translate(0px, 0px) scale(1, 1)"
+            : `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+          panel.style.borderRadius = "999px";
+          panel.style.filter = reducedMotionQuery.matches ? "none" : "blur(10px) saturate(1.18)";
+          await waitMs(MORPH_MS + 24);
+          panel.hidden = true;
+          widget.dataset.open = "false";
+          widget.dataset.state = "closed";
+          launcher.setAttribute("aria-expanded", "false");
+          panel.style.transition = "";
+          panel.style.transform = "";
+          panel.style.opacity = "";
+          panel.style.borderRadius = "";
+          panel.style.filter = "";
+          panel.style.willChange = "";
+          panel.classList.remove("is-morphing");
+          setMaximizedMode(false);
+          setMobileMode(false);
+        };
+
+        const closeMobile = async () => {
+          widget.dataset.state = "closing";
+          panel.style.opacity = "0";
+          panel.style.transform = "scale(0.94)";
+          await waitMs(180);
+          panel.hidden = true;
+          widget.dataset.open = "false";
+          widget.dataset.state = "closed";
+          launcher.setAttribute("aria-expanded", "false");
+          document.body.classList.remove("assistant-chat-scroll-lock");
+        };
+
+        const setOpen = async (open, { focusInputField = true } = {}) => {
+          const shouldOpen = Boolean(open);
+          if (isTransitioning) return;
+          if (shouldOpen && widget.dataset.open === "true") return;
+          if (!shouldOpen && widget.dataset.open === "false") return;
+          isTransitioning = true;
+
+          if (shouldOpen) {
+            if (isDesktopMode()) {
+              await openDesktop();
+            } else {
+              await openMobile();
+            }
+            if (focusInputField) input.focus();
+            scrollMessagesToBottom();
+          } else {
+            if (isDesktopMode()) {
+              await closeDesktop();
+            } else {
+              await closeMobile();
+            }
+          }
+
+          isTransitioning = false;
+        };
+
+        const syncLayoutToViewport = () => {
+          if (widget.dataset.open !== "true" || panel.hidden) return;
+          if (isDesktopMode()) {
+            setMobileMode(false);
+            if (windowState.isMaximized) {
+              applyRect(getMaximizedRect());
+              setMaximizedMode(true);
+            } else {
+              applyRect(clampRect(windowState.rect || getDefaultDesktopRect()));
+              setMaximizedMode(false);
+            }
+          } else {
+            setMobileMode(true);
+          }
+        };
+
+        widget.dataset.state = "closed";
+        if (isDesktopMode()) {
+          setMobileMode(false);
+          applyRect(getDefaultDesktopRect());
+          setMaximizedMode(false);
+        } else {
+          setMobileMode(true);
+        }
+
+        const setBusy = (busy) => {
+          const isBusy = Boolean(busy);
+          form.setAttribute("aria-busy", isBusy ? "true" : "false");
+          input.disabled = isBusy;
+          sendButton.disabled = isBusy;
+        };
+
+        const scrollMessagesToBottom = () => {
+          messagesElement.scrollTop = messagesElement.scrollHeight;
+        };
+
+        const sanitizeHtml = (html) => {
+          if (window.DOMPurify && typeof window.DOMPurify.sanitize === "function") {
+            return window.DOMPurify.sanitize(html, {
+              USE_PROFILES: { html: true, svg: true, svgFilters: true },
+            });
+          }
+          return html;
+        };
+
+        const renderMarkdown = async (target, markdownText) => {
+          const source = String(markdownText || "").trim();
+          if (!source) {
+            target.textContent = "";
+            return;
+          }
+
+          if (!window.marked || typeof window.marked.parse !== "function") {
+            target.textContent = source;
+            return;
+          }
+
+          const rendered = window.marked.parse(source);
+          target.innerHTML = sanitizeHtml(rendered);
+          await renderMermaidBlocks(target);
+        };
+
+        const renderMermaidBlocks = async (container) => {
+          const blocks = Array.from(
+            container.querySelectorAll("pre code.language-mermaid, pre code.lang-mermaid, pre code.mermaid")
+          );
+          if (!blocks.length || !window.mermaid) return;
+
+          if (!mermaidInitialized) {
+            window.mermaid.initialize({
+              startOnLoad: false,
+              securityLevel: "loose",
+              theme: "dark",
+              fontFamily: '"Manrope", "Space Grotesk", sans-serif',
+            });
+            mermaidInitialized = true;
+          }
+
+          for (const code of blocks) {
+            const source = String(code.textContent || "").trim();
+            const pre = code.closest("pre");
+            if (!pre || !source) continue;
+
+            const host = document.createElement("div");
+            host.className = "assistant-widget-mermaid";
+            pre.replaceWith(host);
+
+            try {
+              const graphId = `assistant-widget-mermaid-${Date.now()}-${mermaidRenderCounter++}`;
+              const rendered = await window.mermaid.render(graphId, source);
+              host.innerHTML = rendered?.svg || "";
+            } catch (error) {
+              host.classList.add("is-error");
+              host.textContent = `Mermaid render failed: ${error?.message || "Unknown error."}`;
+            }
+          }
+        };
+
+        const addMessage = async ({ role, content, isError = false, markdown = true }) => {
+          const normalizedRole = role === "user" ? "user" : "assistant";
+          const article = document.createElement("article");
+          article.className = `assistant-widget-message is-${normalizedRole}${isError ? " is-error" : ""}`;
+
+          const meta = document.createElement("p");
+          meta.className = "assistant-widget-message-meta";
+          meta.textContent = normalizedRole === "user" ? "You" : "Assistant";
+          article.appendChild(meta);
+
+          const bubble = document.createElement("div");
+          bubble.className = "assistant-widget-bubble";
+          if (markdown) {
+            bubble.classList.add("assistant-widget-markdown");
+            await renderMarkdown(bubble, content);
+          } else {
+            bubble.textContent = String(content || "");
+          }
+          article.appendChild(bubble);
+
+          messagesElement.appendChild(article);
+          scrollMessagesToBottom();
+        };
+
+        const clearConversation = () => {
+          conversation = [];
+          messagesElement.innerHTML = "";
+        };
+
+        const buildPreviewReply = (prompt) => {
+          const lower = prompt.toLowerCase();
+          if (lower.includes("mermaid") || lower.includes("diagram") || lower.includes("flow")) {
+            return mermaidDemo;
+          }
+          if (lower.includes("markdown") || lower.includes("table") || lower.includes("code")) {
+            return markdownDemo;
+          }
+
+          const safePrompt = prompt.replace(/```/g, "\\`\\`\\`");
+          return `### Preview response
+You said:
+\`\`\`text
+${safePrompt}
+\`\`\`
+
+- Markdown rendering is active
+- Mermaid rendering is active
+- Backend submission can be attached with \`setSubmitHandler\``;
+        };
+
+        const maximizeWindow = () => {
+          if (!isDesktopMode() || panel.hidden || isTransitioning) return;
+          if (windowState.isMaximized) {
+            windowState.isMaximized = false;
+            const restoreRect = windowState.preMaxRect ? clampRect(windowState.preMaxRect) : getDefaultDesktopRect();
+            windowState.preMaxRect = null;
+            applyRect(restoreRect);
+            panel.style.borderRadius = "1.08rem";
+            setMaximizedMode(false);
+          } else {
+            windowState.preMaxRect = clampRect(readPanelRect());
+            windowState.isMaximized = true;
+            applyRect(getMaximizedRect());
+            panel.style.borderRadius = "0";
+            setMaximizedMode(true);
+          }
+        };
+
+        const stopDrag = () => {
+          dragState = null;
+          dragHandle.classList.remove("is-dragging");
+          document.removeEventListener("pointermove", onDragMove);
+          document.removeEventListener("pointerup", stopDrag);
+        };
+
+        const onDragMove = (event) => {
+          if (!dragState) return;
+          const dx = event.clientX - dragState.startX;
+          const dy = event.clientY - dragState.startY;
+          const next = clampRect({
+            left: dragState.startRect.left + dx,
+            top: dragState.startRect.top + dy,
+            width: dragState.startRect.width,
+            height: dragState.startRect.height,
+          });
+          applyRect(next);
+        };
+
+        const startDrag = (event) => {
+          if (!isDesktopMode() || panel.hidden || windowState.isMaximized || isTransitioning) return;
+          if (event.button !== 0) return;
+          if (!(event.target instanceof Element)) return;
+          if (event.target.closest("button,textarea,input,a,[data-resize]")) return;
+          event.preventDefault();
+          dragHandle.classList.add("is-dragging");
+          dragState = {
+            startX: event.clientX,
+            startY: event.clientY,
+            startRect: clampRect(readPanelRect()),
+          };
+          document.addEventListener("pointermove", onDragMove);
+          document.addEventListener("pointerup", stopDrag);
+        };
+
+        const stopResize = () => {
+          resizeState = null;
+          document.removeEventListener("pointermove", onResizeMove);
+          document.removeEventListener("pointerup", stopResize);
+        };
+
+        const onResizeMove = (event) => {
+          if (!resizeState) return;
+          const dx = event.clientX - resizeState.startX;
+          const dy = event.clientY - resizeState.startY;
+          const direction = resizeState.direction;
+          const start = resizeState.startRect;
+          const startRight = start.left + start.width;
+          const startBottom = start.top + start.height;
+          let left = start.left;
+          let top = start.top;
+          let width = start.width;
+          let height = start.height;
+
+          if (direction.includes("e")) width = start.width + dx;
+          if (direction.includes("s")) height = start.height + dy;
+          if (direction.includes("w")) {
+            width = start.width - dx;
+            left = start.left + dx;
+          }
+          if (direction.includes("n")) {
+            height = start.height - dy;
+            top = start.top + dy;
+          }
+
+          const limits = getDesktopLimits();
+          width = Math.max(limits.minWidth, Math.min(limits.maxWidth, width));
+          height = Math.max(limits.minHeight, Math.min(limits.maxHeight, height));
+          if (direction.includes("w")) left = startRight - width;
+          if (direction.includes("n")) top = startBottom - height;
+
+          applyRect(clampRect({ left, top, width, height }));
+        };
+
+        const startResize = (event, direction) => {
+          if (!isDesktopMode() || panel.hidden || windowState.isMaximized || isTransitioning) return;
+          if (event.button !== 0) return;
+          event.preventDefault();
+          resizeState = {
+            direction,
+            startX: event.clientX,
+            startY: event.clientY,
+            startRect: clampRect(readPanelRect()),
+          };
+          document.addEventListener("pointermove", onResizeMove);
+          document.addEventListener("pointerup", stopResize);
+        };
+
+        launcher.addEventListener("click", () => {
+          void setOpen(true);
+        });
+
+        closeButton.addEventListener("click", async () => {
+          await setOpen(false, { focusInputField: false });
+          launcher.focus();
+        });
+
+        maximizeButton.addEventListener("click", (event) => {
+          event.preventDefault();
+          maximizeWindow();
+        });
+
+        dragHandle.addEventListener("pointerdown", startDrag);
+
+        resizeHandles.forEach((handle) => {
+          handle.addEventListener("pointerdown", (event) => {
+            const direction = handle.getAttribute("data-resize");
+            if (!direction) return;
+            startResize(event, direction);
+          });
+        });
+
+        clearButton.addEventListener("click", () => {
+          clearConversation();
+          setStatus("Conversation cleared.");
+          input.focus();
+        });
+
+        input.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            form.requestSubmit();
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !panel.hidden) {
+            void setOpen(false, { focusInputField: false }).then(() => {
+              launcher.focus();
+            });
+          }
+        });
+
+        window.addEventListener("resize", syncLayoutToViewport);
+        if (typeof desktopQuery.addEventListener === "function") {
+          desktopQuery.addEventListener("change", syncLayoutToViewport);
+        } else if (typeof desktopQuery.addListener === "function") {
+          desktopQuery.addListener(syncLayoutToViewport);
+        }
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const prompt = input.value.trim();
+          if (!prompt) {
+            input.focus();
+            return;
+          }
+
+          await setOpen(true);
+          await addMessage({ role: "user", content: prompt, markdown: false });
+          conversation.push({ role: "user", content: prompt });
+          input.value = "";
+          setBusy(true);
+          setStatus("Thinking...");
+
+          try {
+            let replyText = "";
+            let isError = false;
+
+            if (typeof externalSubmitHandler === "function") {
+              const result = await externalSubmitHandler({
+                prompt,
+                history: conversation.slice(),
+                agentProfile,
+                setStatus,
+                setBusy,
+                addAssistantMessage: async (markdownText) => {
+                  await addMessage({ role: "assistant", content: markdownText, markdown: true });
+                },
+              });
+
+              if (typeof result === "string") {
+                replyText = result;
+              } else if (result && typeof result === "object") {
+                replyText = String(result.markdown || result.text || "");
+                isError = Boolean(result.error);
+              }
+            } else {
+              replyText = buildPreviewReply(prompt);
+            }
+
+            if (replyText.trim()) {
+              await addMessage({ role: "assistant", content: replyText, markdown: true, isError });
+              conversation.push({ role: "assistant", content: replyText });
+            }
+            setStatus("Preview mode. Connect your backend handler.");
+          } catch (error) {
+            const message = `**Request failed**: ${error?.message || "Unknown error."}`;
+            await addMessage({ role: "assistant", content: message, markdown: true, isError: true });
+            conversation.push({ role: "assistant", content: message });
+            setStatus("Error. Check your submit handler.");
+          } finally {
+            setBusy(false);
+            input.focus();
+          }
+        });
+
+        window.PortalAssistantWidget = {
+          setSubmitHandler(handler) {
+            externalSubmitHandler = typeof handler === "function" ? handler : null;
+          },
+          open() {
+            return setOpen(true);
+          },
+          close() {
+            return setOpen(false, { focusInputField: false });
+          },
+          clear() {
+            clearConversation();
+          },
+          async addAssistantMarkdown(markdownText) {
+            await addMessage({ role: "assistant", content: markdownText, markdown: true });
+          },
+          getAgentProfile() {
+            return agentProfile;
+          },
+        };
+      })();
+    </script>

@@ -1,0 +1,2003 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cavazos.ai</title>
+    <meta
+      name="description"
+      content="cavazos.ai provides a secure client portal for infrastructure status, operational logs, and emergency alerting."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      window.tailwind = window.tailwind || {};
+      window.tailwind.config = { corePlugins: { preflight: false } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg-1: #edf3fb;
+        --bg-2: #f8fbff;
+        --flare-1: rgba(57, 145, 228, 0.2);
+        --flare-2: rgba(112, 168, 231, 0.22);
+        --ink: #162a44;
+        --muted: #4b6382;
+        --line: rgba(88, 122, 164, 0.26);
+        --panel-bg-1: rgba(255, 255, 255, 0.9);
+        --panel-bg-2: rgba(236, 245, 255, 0.82);
+        --brand: #123056;
+        --eyebrow: #2c71b8;
+        --btn-secondary-bg: rgba(233, 243, 255, 0.9);
+        --btn-secondary-ink: #1b375b;
+        --feature-text: #355071;
+        --feature-line: rgba(44, 113, 184, 0.42);
+        --panel-back-bg: rgba(233, 243, 255, 0.88);
+        --panel-back-border: rgba(88, 122, 164, 0.38);
+        --panel-back-ink: #1f3f66;
+        --field-bg: rgba(255, 255, 255, 0.96);
+        --field-border: rgba(88, 122, 164, 0.4);
+        --field-ink: #102742;
+        --focus-outline: rgba(53, 145, 230, 0.32);
+        --focus-border: rgba(53, 145, 230, 0.52);
+        --subtle-text: #4f6d93;
+        --link-ink: #1c78be;
+        --assistant-form-bg: rgba(247, 252, 255, 0.92);
+        --assistant-form-border: rgba(104, 141, 184, 0.34);
+        --assistant-form-ring: rgba(49, 147, 235, 0.2);
+        --assistant-form-shadow: 0 22px 44px rgba(38, 83, 136, 0.18);
+        --assistant-icon-bg: linear-gradient(140deg, rgba(110, 204, 247, 0.3), rgba(110, 204, 247, 0.12), transparent);
+        --assistant-icon-ink: #236aa5;
+        --assistant-input-bg: rgba(255, 255, 255, 0.94);
+        --assistant-input-bg-focus: rgba(255, 255, 255, 0.99);
+        --assistant-input-ink: #102742;
+        --assistant-input-placeholder: #5e7a9e;
+        --assistant-send-border: rgba(57, 153, 237, 0.46);
+        --assistant-send-bg: linear-gradient(145deg, #7de5ff, #54bced 58%, #2f86c0);
+        --assistant-send-ink: #062236;
+        --assistant-send-shadow: 0 12px 25px rgba(44, 134, 208, 0.25);
+        --assistant-caption: #4f6d93;
+        --role-chip-border: rgba(88, 122, 164, 0.34);
+        --role-chip-bg: rgba(232, 242, 255, 0.9);
+        --role-chip-text: #355071;
+        --tree-folder-border: rgba(56, 137, 206, 0.3);
+        --tree-folder-bg: rgba(231, 244, 255, 0.92);
+        --tree-folder-text: #2a6ca7;
+        --tree-node-border: rgba(88, 122, 164, 0.26);
+        --tree-node-bg: rgba(250, 253, 255, 0.93);
+        --tree-label: #274364;
+        --tree-count: #597ca6;
+        --tree-action-border: rgba(88, 122, 164, 0.3);
+        --tree-action-bg: rgba(235, 245, 255, 0.94);
+        --tree-action-text: #274364;
+        --tree-action-border-hover: rgba(53, 145, 230, 0.56);
+        --tree-action-bg-hover: rgba(223, 239, 255, 1);
+        --tree-branch-line: rgba(88, 122, 164, 0.36);
+        --tree-page-bg: rgba(240, 249, 255, 0.92);
+        --tree-page-text: #305073;
+        --tree-page-border-hover: rgba(53, 145, 230, 0.44);
+        --tree-page-bg-hover: rgba(227, 241, 255, 0.98);
+        --tree-page-meta: #597ca6;
+        --tree-page-muted: #6f8daf;
+        --project-empty-text: #4f6d93;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          color-scheme: dark;
+          --bg-1: #070b14;
+          --bg-2: #061423;
+          --flare-1: rgba(24, 152, 255, 0.22);
+          --flare-2: rgba(15, 89, 144, 0.3);
+          --ink: #dbe8ff;
+          --muted: #95a7c7;
+          --line: rgba(162, 195, 255, 0.18);
+          --panel-bg-1: rgba(11, 22, 39, 0.92);
+          --panel-bg-2: rgba(8, 16, 30, 0.72);
+          --brand: #e8f3ff;
+          --eyebrow: #9bc8ff;
+          --btn-secondary-bg: rgba(9, 24, 43, 0.68);
+          --btn-secondary-ink: #dbe8ff;
+          --feature-text: #b8c9e4;
+          --feature-line: rgba(89, 212, 255, 0.42);
+          --panel-back-bg: rgba(9, 24, 43, 0.68);
+          --panel-back-border: rgba(162, 195, 255, 0.3);
+          --panel-back-ink: #d7e7ff;
+          --field-bg: rgba(9, 20, 36, 0.78);
+          --field-border: rgba(162, 195, 255, 0.3);
+          --field-ink: #e5efff;
+          --focus-outline: rgba(137, 224, 255, 0.4);
+          --focus-border: rgba(137, 224, 255, 0.5);
+          --subtle-text: #8da7cb;
+          --link-ink: #a6e8ff;
+          --assistant-form-bg: rgba(2, 10, 24, 0.7);
+          --assistant-form-border: rgba(148, 163, 184, 0.2);
+          --assistant-form-ring: rgba(103, 232, 249, 0.18);
+          --assistant-form-shadow: 0 26px 70px rgba(2, 6, 23, 0.62);
+          --assistant-icon-bg: linear-gradient(140deg, rgba(103, 232, 249, 0.25), rgba(103, 232, 249, 0.1), transparent);
+          --assistant-icon-ink: rgba(224, 242, 254, 0.95);
+          --assistant-input-bg: rgba(15, 23, 42, 0.35);
+          --assistant-input-bg-focus: rgba(15, 23, 42, 0.55);
+          --assistant-input-ink: #f1f5f9;
+          --assistant-input-placeholder: #94a3b8;
+          --assistant-send-border: rgba(186, 230, 253, 0.45);
+          --assistant-send-bg: linear-gradient(145deg, rgba(125, 211, 252, 0.35), rgba(3, 105, 161, 0.65));
+          --assistant-send-ink: #f0f9ff;
+          --assistant-send-shadow: 0 12px 25px rgba(14, 165, 233, 0.28);
+          --assistant-caption: rgba(203, 213, 225, 0.8);
+          --role-chip-border: rgba(162, 195, 255, 0.3);
+          --role-chip-bg: rgba(10, 24, 42, 0.74);
+          --role-chip-text: #b8cceb;
+          --tree-folder-border: rgba(130, 220, 255, 0.26);
+          --tree-folder-bg: rgba(8, 23, 41, 0.72);
+          --tree-folder-text: #9fd6ff;
+          --tree-node-border: rgba(162, 195, 255, 0.24);
+          --tree-node-bg: rgba(8, 20, 37, 0.68);
+          --tree-label: #cfe1fb;
+          --tree-count: #8fb1da;
+          --tree-action-border: rgba(162, 195, 255, 0.28);
+          --tree-action-bg: rgba(9, 24, 43, 0.62);
+          --tree-action-text: #cde4ff;
+          --tree-action-border-hover: rgba(130, 220, 255, 0.5);
+          --tree-action-bg-hover: rgba(15, 37, 65, 0.78);
+          --tree-branch-line: rgba(140, 179, 228, 0.28);
+          --tree-page-bg: rgba(8, 19, 36, 0.72);
+          --tree-page-text: #bed6f6;
+          --tree-page-border-hover: rgba(130, 220, 255, 0.42);
+          --tree-page-bg-hover: rgba(19, 45, 77, 0.55);
+          --tree-page-meta: #7e9dc4;
+          --tree-page-muted: #8aa4c9;
+          --project-empty-text: #a8bedf;
+        }
+      }
+
+      :root[data-theme="dark"],
+      html.dark:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg-1: #070b14;
+        --bg-2: #061423;
+        --flare-1: rgba(24, 152, 255, 0.22);
+        --flare-2: rgba(15, 89, 144, 0.3);
+        --ink: #dbe8ff;
+        --muted: #95a7c7;
+        --line: rgba(162, 195, 255, 0.18);
+        --panel-bg-1: rgba(11, 22, 39, 0.92);
+        --panel-bg-2: rgba(8, 16, 30, 0.72);
+        --brand: #e8f3ff;
+        --eyebrow: #9bc8ff;
+        --btn-secondary-bg: rgba(9, 24, 43, 0.68);
+        --btn-secondary-ink: #dbe8ff;
+        --feature-text: #b8c9e4;
+        --feature-line: rgba(89, 212, 255, 0.42);
+        --panel-back-bg: rgba(9, 24, 43, 0.68);
+        --panel-back-border: rgba(162, 195, 255, 0.3);
+        --panel-back-ink: #d7e7ff;
+        --field-bg: rgba(9, 20, 36, 0.78);
+        --field-border: rgba(162, 195, 255, 0.3);
+        --field-ink: #e5efff;
+        --focus-outline: rgba(137, 224, 255, 0.4);
+        --focus-border: rgba(137, 224, 255, 0.5);
+        --subtle-text: #8da7cb;
+        --link-ink: #a6e8ff;
+        --assistant-form-bg: rgba(2, 10, 24, 0.7);
+        --assistant-form-border: rgba(148, 163, 184, 0.2);
+        --assistant-form-ring: rgba(103, 232, 249, 0.18);
+        --assistant-form-shadow: 0 26px 70px rgba(2, 6, 23, 0.62);
+        --assistant-icon-bg: linear-gradient(140deg, rgba(103, 232, 249, 0.25), rgba(103, 232, 249, 0.1), transparent);
+        --assistant-icon-ink: rgba(224, 242, 254, 0.95);
+        --assistant-input-bg: rgba(15, 23, 42, 0.35);
+        --assistant-input-bg-focus: rgba(15, 23, 42, 0.55);
+        --assistant-input-ink: #f1f5f9;
+        --assistant-input-placeholder: #94a3b8;
+        --assistant-send-border: rgba(186, 230, 253, 0.45);
+        --assistant-send-bg: linear-gradient(145deg, rgba(125, 211, 252, 0.35), rgba(3, 105, 161, 0.65));
+        --assistant-send-ink: #f0f9ff;
+        --assistant-send-shadow: 0 12px 25px rgba(14, 165, 233, 0.28);
+        --assistant-caption: rgba(203, 213, 225, 0.8);
+        --role-chip-border: rgba(162, 195, 255, 0.3);
+        --role-chip-bg: rgba(10, 24, 42, 0.74);
+        --role-chip-text: #b8cceb;
+        --tree-folder-border: rgba(130, 220, 255, 0.26);
+        --tree-folder-bg: rgba(8, 23, 41, 0.72);
+        --tree-folder-text: #9fd6ff;
+        --tree-node-border: rgba(162, 195, 255, 0.24);
+        --tree-node-bg: rgba(8, 20, 37, 0.68);
+        --tree-label: #cfe1fb;
+        --tree-count: #8fb1da;
+        --tree-action-border: rgba(162, 195, 255, 0.28);
+        --tree-action-bg: rgba(9, 24, 43, 0.62);
+        --tree-action-text: #cde4ff;
+        --tree-action-border-hover: rgba(130, 220, 255, 0.5);
+        --tree-action-bg-hover: rgba(15, 37, 65, 0.78);
+        --tree-branch-line: rgba(140, 179, 228, 0.28);
+        --tree-page-bg: rgba(8, 19, 36, 0.72);
+        --tree-page-text: #bed6f6;
+        --tree-page-border-hover: rgba(130, 220, 255, 0.42);
+        --tree-page-bg-hover: rgba(19, 45, 77, 0.55);
+        --tree-page-meta: #7e9dc4;
+        --tree-page-muted: #8aa4c9;
+        --project-empty-text: #a8bedf;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+      }
+
+      body {
+        background:
+          radial-gradient(100rem 70rem at 120% -20%, var(--flare-1), transparent 60%),
+          radial-gradient(90rem 60rem at -15% 100%, var(--flare-2), transparent 55%),
+          linear-gradient(145deg, var(--bg-1), var(--bg-2));
+        color: var(--ink);
+        font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .page {
+        width: min(1100px, 94vw);
+        margin: 0 auto;
+        padding: 1.25rem 0 2.5rem;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 2.25rem;
+      }
+
+      .brand {
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+        letter-spacing: 0.02em;
+        color: var(--brand);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .header-logout-form {
+        margin: 0;
+      }
+
+      .header-logout-btn {
+        padding: 0;
+        border: 0;
+        background: transparent;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 1.3rem;
+        align-items: stretch;
+      }
+
+      .orb-panel {
+        border: 1px solid var(--line);
+        background: linear-gradient(165deg, var(--panel-bg-1), var(--panel-bg-2));
+        backdrop-filter: blur(8px);
+        border-radius: 1.15rem;
+        height: 100%;
+      }
+
+      .intro {
+        border: 0;
+        background: transparent;
+        backdrop-filter: none;
+        border-radius: 0;
+        padding: clamp(1.2rem, 3vw, 2rem);
+        display: flex;
+      }
+
+      .auth-panel-stack {
+        display: grid;
+        width: 100%;
+        min-height: clamp(31rem, 66vh, 42rem);
+      }
+
+      .auth-panel-view {
+        grid-area: 1 / 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.85rem;
+        width: 100%;
+        max-width: 40rem;
+        margin-inline: auto;
+        opacity: 0;
+        transform: translateY(0.55rem);
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 220ms ease, transform 220ms ease;
+      }
+
+      .auth-panel-view.is-active {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.42rem;
+        font-size: 0.76rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--eyebrow);
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 999px;
+        background: radial-gradient(circle at 35% 35%, #bdf2ff, #2cb4f0);
+        box-shadow: 0 0 16px rgba(41, 194, 245, 0.62);
+      }
+
+      h1 {
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        margin: 0.95rem 0 0.8rem;
+        font-size: clamp(1.85rem, 4.2vw, 3.1rem);
+        line-height: 1.08;
+        max-width: none;
+      }
+
+      .intro-headline {
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        margin: 0.95rem 0 0.8rem;
+        font-size: clamp(1.35rem, 2.8vw, 2rem);
+        line-height: 1.1;
+        max-width: none;
+      }
+
+      .lede {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.58;
+        max-width: 56ch;
+      }
+
+      .actions {
+        margin-top: 0.85rem;
+        display: flex;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        text-decoration: none;
+        border-radius: 0.82rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.01em;
+        padding: 0.64rem 0.96rem;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: transform 140ms ease, filter 140ms ease, border-color 140ms ease;
+      }
+
+      .btn-primary {
+        color: #041625;
+        background: linear-gradient(150deg, #98f0ff, #4ecff4 58%, #2f9fce);
+        border-color: rgba(170, 238, 255, 0.75);
+      }
+
+      .btn-secondary {
+        color: var(--btn-secondary-ink);
+        border-color: var(--line);
+        background: var(--btn-secondary-bg);
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.04);
+      }
+
+      .image-action-btn,
+      .image-action-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 0.78rem;
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        line-height: 0;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 140ms ease, filter 140ms ease;
+      }
+
+      .image-action-btn:hover,
+      .image-action-link:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.04);
+      }
+
+      .image-action-btn:focus-visible,
+      .image-action-link:focus-visible {
+        outline: 2px solid var(--focus-border);
+        outline-offset: 2px;
+      }
+
+      .image-action-btn img,
+      .image-action-link img {
+        display: block;
+        width: clamp(6.8rem, 16vw, 9rem);
+        height: auto;
+      }
+
+      .info-image-link img {
+        width: clamp(2.35rem, 4.6vw, 3.1rem);
+      }
+
+      .header-logout-btn img {
+        width: clamp(6rem, 10vw, 7.4rem);
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 0.95rem 0 0;
+        display: grid;
+        gap: 0.58rem;
+        max-height: 36rem;
+        overflow: hidden;
+        opacity: 1;
+        transition: max-height 240ms ease, opacity 220ms ease, margin-top 240ms ease;
+      }
+
+      .feature-list.is-collapsed {
+        max-height: 0;
+        margin-top: 0;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .feature-list li {
+        color: var(--feature-text);
+        font-size: 0.92rem;
+        border-left: 2px solid var(--feature-line);
+        padding-left: 0.62rem;
+      }
+
+      .intro-preview-image {
+        width: min(100%, 20.25rem);
+        height: auto;
+        display: block;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        object-fit: contain;
+        margin: 0 auto 0.35rem;
+      }
+
+      .login-panel h2,
+      .signup-panel h2 {
+        margin: 0.15rem 0 0;
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        font-size: clamp(1.35rem, 2.8vw, 2rem);
+        line-height: 1.1;
+      }
+
+      .login-lede {
+        margin: 0.2rem 0 0.25rem;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .panel-top {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        margin-bottom: 0.15rem;
+      }
+
+      .panel-top .eyebrow {
+        margin: 0;
+      }
+
+      .panel-back {
+        border: 1px solid var(--panel-back-border);
+        border-radius: 0.62rem;
+        background: var(--panel-back-bg);
+        color: var(--panel-back-ink);
+        font: inherit;
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 0.4rem 0.62rem;
+        cursor: pointer;
+      }
+
+      .panel-back:hover {
+        border-color: var(--focus-border);
+        filter: brightness(0.98);
+      }
+
+      .login-form {
+        margin-top: 0.35rem;
+        max-width: min(100%, 34rem);
+        width: 100%;
+        display: grid;
+        gap: 0.82rem;
+      }
+
+      .login-label {
+        font-size: 0.83rem;
+        color: var(--muted);
+      }
+
+      .login-input {
+        width: 100%;
+        margin-top: 0.38rem;
+        border: 1px solid var(--field-border);
+        border-radius: 0.75rem;
+        background: var(--field-bg);
+        color: var(--field-ink);
+        padding: 0.7rem 0.78rem;
+        font: inherit;
+      }
+
+      .login-input:focus {
+        outline: 2px solid var(--focus-outline);
+        border-color: var(--focus-border);
+      }
+
+      .login-actions {
+        margin-top: 0.7rem;
+        display: flex;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+      }
+
+      .auth-divider {
+        margin: 0.05rem 0 0;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        color: var(--subtle-text);
+        font-size: 0.76rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .auth-divider::before,
+      .auth-divider::after {
+        content: "";
+        height: 1px;
+        flex: 1;
+        background: var(--line);
+      }
+
+      .microsoft-btn {
+        margin-top: 0.05rem;
+        display: inline-flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        gap: 0.62rem;
+        border: 1px solid rgba(187, 211, 245, 0.38);
+        border-radius: 0.78rem;
+        background: rgba(250, 252, 255, 0.96);
+        color: #13243a;
+        text-decoration: none;
+        font-size: 0.86rem;
+        font-weight: 700;
+        padding: 0.62rem 0.8rem;
+        transition: filter 140ms ease, transform 140ms ease;
+      }
+
+      .microsoft-btn:hover {
+        filter: brightness(0.97);
+        transform: translateY(-1px);
+      }
+
+      .microsoft-btn[aria-disabled="true"] {
+        cursor: not-allowed;
+        opacity: 0.72;
+        transform: none;
+        filter: none;
+      }
+
+      .microsoft-logo {
+        display: inline-grid;
+        grid-template-columns: repeat(2, 0.44rem);
+        gap: 0.08rem;
+      }
+
+      .microsoft-logo i {
+        display: block;
+        width: 0.44rem;
+        height: 0.44rem;
+      }
+
+      .microsoft-logo i:nth-child(1) {
+        background: #f35325;
+      }
+
+      .microsoft-logo i:nth-child(2) {
+        background: #81bc06;
+      }
+
+      .microsoft-logo i:nth-child(3) {
+        background: #05a6f0;
+      }
+
+      .microsoft-logo i:nth-child(4) {
+        background: #ffba08;
+      }
+
+      .login-error {
+        margin: 0.25rem 0 0;
+        border: 1px solid rgba(252, 165, 165, 0.35);
+        border-radius: 0.75rem;
+        background: rgba(69, 10, 10, 0.44);
+        color: #fecaca;
+        font-size: 0.84rem;
+        padding: 0.55rem 0.65rem;
+      }
+
+      .login-hint {
+        margin: 0.1rem 0 0;
+        color: var(--subtle-text);
+        font-size: 0.77rem;
+      }
+
+      .auth-switch {
+        margin: 0.1rem 0 0;
+        color: var(--subtle-text);
+        font-size: 0.8rem;
+      }
+
+      .auth-link {
+        border: 0;
+        background: transparent;
+        color: var(--link-ink);
+        font: inherit;
+        font-weight: 600;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      .auth-link:hover {
+        text-decoration: underline;
+      }
+
+      .auth-message-list {
+        list-style: none;
+        margin: 0 0 0.45rem;
+        padding: 0;
+        display: grid;
+        gap: 0.46rem;
+      }
+
+      .auth-message {
+        border: 1px solid rgba(143, 173, 217, 0.32);
+        border-radius: 0.65rem;
+        background: rgba(10, 25, 45, 0.72);
+        color: #d8e8ff;
+        font-size: 0.82rem;
+        padding: 0.5rem 0.62rem;
+      }
+
+      .auth-message.error {
+        border-color: rgba(252, 165, 165, 0.35);
+        background: rgba(69, 10, 10, 0.44);
+        color: #fecaca;
+      }
+
+      .auth-message.success {
+        border-color: rgba(134, 239, 172, 0.35);
+        background: rgba(6, 52, 26, 0.46);
+        color: #bbf7d0;
+      }
+
+      .dashboard-header {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+      }
+
+      .role-chip {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        border: 1px solid var(--role-chip-border);
+        background: var(--role-chip-bg);
+        color: var(--role-chip-text);
+        font-size: 0.74rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.28rem 0.56rem;
+      }
+
+      .admin-utility-link {
+        display: inline-flex;
+        align-items: center;
+        color: var(--project-empty-text);
+        font-size: 0.78rem;
+        text-decoration: none;
+        border-bottom: 1px dotted var(--tree-action-border);
+        padding-bottom: 0.05rem;
+      }
+
+      .admin-utility-link:hover {
+        color: var(--tree-action-text);
+        border-bottom-color: var(--tree-action-border-hover);
+      }
+
+      .project-nav {
+        margin-top: 0.8rem;
+        display: grid;
+        gap: 0.78rem;
+      }
+
+      .project-tree {
+        margin-top: 0.2rem;
+      }
+
+      .folder-icon {
+        display: inline-flex;
+        width: 2.2rem;
+        min-width: 2.2rem;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        border: 1px solid var(--tree-folder-border);
+        background: var(--tree-folder-bg);
+        color: var(--tree-folder-text);
+        font-size: 0.63rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        line-height: 1;
+        padding: 0.24rem 0.36rem;
+      }
+
+      .wiki-tree-node {
+        border: 1px solid var(--tree-node-border);
+        border-radius: 12px;
+        background: var(--tree-node-bg);
+        overflow: hidden;
+      }
+
+      .wiki-tree-node + .wiki-tree-node {
+        margin-top: 0.45rem;
+      }
+
+      .wiki-tree-node__summary {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.4rem 0.5rem;
+        list-style: none;
+        cursor: pointer;
+      }
+
+      .wiki-tree-node__summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .wiki-tree-node__summary::marker {
+        content: "";
+      }
+
+      .wiki-tree-node__label {
+        min-width: 0;
+        flex: 1 1 auto;
+        color: var(--tree-label);
+        font-size: 0.82rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .wiki-tree-node__count {
+        color: var(--tree-count);
+        font-size: 0.72rem;
+      }
+
+      .wiki-tree-node__action {
+        text-decoration: none;
+        border: 1px solid var(--tree-action-border);
+        border-radius: 0.5rem;
+        background: var(--tree-action-bg);
+        color: var(--tree-action-text);
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.22rem 0.45rem;
+      }
+
+      .wiki-tree-node__action:hover {
+        border-color: var(--tree-action-border-hover);
+        background: var(--tree-action-bg-hover);
+      }
+
+      .wiki-tree-node__children {
+        display: grid;
+        gap: 0.22rem;
+        padding: 0.28rem 0.5rem 0.5rem;
+      }
+
+      .wiki-tree-node--folder > .wiki-tree-node__children {
+        margin-left: 0.75rem;
+        padding-left: 0.55rem;
+        border-left: 1px dashed var(--tree-branch-line);
+      }
+
+      .wiki-tree-page {
+        display: flex;
+        align-items: center;
+        gap: 0.42rem;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        background: var(--tree-page-bg);
+        color: var(--tree-page-text);
+        text-decoration: none;
+        padding: 0.34rem 0.45rem;
+        transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+      }
+
+      .wiki-tree-page:hover {
+        border-color: var(--tree-page-border-hover);
+        background: var(--tree-page-bg-hover);
+        transform: translateY(-1px);
+      }
+
+      .wiki-tree-page__label {
+        min-width: 0;
+        flex: 1 1 auto;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .wiki-tree-page__meta {
+        font-size: 0.7rem;
+        color: var(--tree-page-meta);
+      }
+
+      .wiki-tree-page--muted {
+        color: var(--tree-page-muted);
+        cursor: default;
+      }
+
+      .wiki-tree-page--muted:hover {
+        border-color: transparent;
+        background: var(--tree-page-bg);
+        transform: none;
+      }
+
+      .project-empty {
+        margin: 0;
+        font-size: 0.88rem;
+        color: var(--project-empty-text);
+      }
+
+      .inline-form {
+        display: grid;
+        gap: 0.52rem;
+        max-width: min(100%, 25rem);
+      }
+
+      .inline-form-row {
+        display: flex;
+        gap: 0.52rem;
+        flex-wrap: wrap;
+      }
+
+      .inline-input {
+        flex: 1 1 16rem;
+        min-width: 10rem;
+        border: 1px solid var(--field-border);
+        border-radius: 0.72rem;
+        background: var(--field-bg);
+        color: var(--field-ink);
+        padding: 0.58rem 0.72rem;
+        font: inherit;
+        font-size: 0.86rem;
+      }
+
+      .inline-input:focus {
+        outline: 2px solid var(--focus-outline);
+        border-color: var(--focus-border);
+      }
+
+      .orb-panel {
+        padding: 0.95rem;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 0.75rem;
+      }
+
+      .orb-panel h2 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .orb-frame {
+        border-radius: 0.95rem;
+        overflow: hidden;
+        border: 1px solid rgba(162, 195, 255, 0.24);
+        min-height: 14rem;
+        background: #04070f;
+        position: relative;
+      }
+
+      #landingOrbContainer {
+        position: absolute;
+        inset: 0;
+      }
+
+      #landingOrbContainer canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .footer {
+        margin-top: 1.4rem;
+        color: #9ab0d2;
+        font-size: 0.79rem;
+      }
+
+      .assistant-form {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 1.35rem;
+        border: 1px solid var(--assistant-form-border);
+        background: var(--assistant-form-bg);
+        padding: 0.62rem;
+        backdrop-filter: blur(16px);
+        transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+        box-shadow: var(--assistant-form-shadow), 0 0 0 1px var(--assistant-form-ring);
+      }
+
+      .assistant-form:focus-within {
+        transform: translateY(-2px);
+        border-color: var(--focus-border);
+      }
+
+      .assistant-icon {
+        display: flex;
+        height: 2.5rem;
+        width: 2.5rem;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.75rem;
+        background: var(--assistant-icon-bg);
+        color: var(--assistant-icon-ink);
+      }
+
+      .assistant-icon svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      .assistant-input {
+        min-width: 0;
+        flex: 1;
+        border-radius: 0.75rem;
+        border: 1px solid transparent;
+        background: var(--assistant-input-bg);
+        padding: 0.62rem 0.75rem;
+        color: var(--assistant-input-ink);
+        font: inherit;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+      }
+
+      .assistant-input::placeholder {
+        color: var(--assistant-input-placeholder);
+      }
+
+      .assistant-input:focus {
+        border-color: var(--focus-border);
+        background: var(--assistant-input-bg-focus);
+        box-shadow: 0 0 0 2px var(--focus-outline);
+      }
+
+      .assistant-send {
+        display: inline-flex;
+        height: 2.5rem;
+        width: 2.5rem;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.75rem;
+        border: 1px solid var(--assistant-send-border);
+        background: var(--assistant-send-bg);
+        color: var(--assistant-send-ink);
+        box-shadow: var(--assistant-send-shadow);
+        transition: transform 140ms ease, filter 140ms ease;
+      }
+
+      .assistant-send:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.04);
+      }
+
+      .assistant-send:active {
+        transform: translateY(0);
+      }
+
+      .assistant-send svg {
+        width: 1.04rem;
+        height: 1.04rem;
+      }
+
+      .assistant-caption {
+        margin: 0;
+        padding: 0.5rem 0.5rem 0;
+        text-align: center;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        color: var(--assistant-caption);
+      }
+
+      .landing-guest {
+        color-scheme: light;
+        --bg-1: #f2f7fd;
+        --bg-2: #e5eef9;
+        --flare-1: rgba(208, 149, 86, 0.2);
+        --flare-2: rgba(106, 176, 221, 0.18);
+        --ink: #1c3450;
+        --muted: #4e6786;
+        --line: rgba(101, 132, 166, 0.28);
+        --panel-bg-1: rgba(255, 255, 255, 0.92);
+        --panel-bg-2: rgba(241, 248, 255, 0.9);
+        --brand: #6c4a27;
+        --eyebrow: #2f74b6;
+        --btn-secondary-bg: rgba(231, 241, 252, 0.93);
+        --btn-secondary-ink: #234467;
+        --feature-text: #2f4a69;
+        --feature-line: rgba(187, 142, 81, 0.4);
+        --panel-back-bg: rgba(232, 241, 251, 0.9);
+        --panel-back-border: rgba(101, 132, 166, 0.4);
+        --panel-back-ink: #295076;
+        --field-bg: rgba(255, 255, 255, 0.95);
+        --field-border: rgba(101, 132, 166, 0.38);
+        --field-ink: #17304d;
+        --focus-outline: rgba(109, 179, 237, 0.32);
+        --focus-border: rgba(81, 155, 217, 0.56);
+        --subtle-text: #506b8a;
+        --link-ink: #a06431;
+        --assistant-form-bg: rgba(248, 252, 255, 0.94);
+        --assistant-form-border: rgba(112, 146, 182, 0.32);
+        --assistant-form-ring: rgba(104, 177, 236, 0.2);
+        --assistant-form-shadow: 0 18px 36px rgba(66, 95, 130, 0.2);
+        --assistant-icon-bg: linear-gradient(140deg, rgba(110, 201, 246, 0.26), rgba(110, 201, 246, 0.08), transparent);
+        --assistant-icon-ink: #2b6a9f;
+        --assistant-input-bg: rgba(255, 255, 255, 0.94);
+        --assistant-input-bg-focus: rgba(255, 255, 255, 0.99);
+        --assistant-input-ink: #16314f;
+        --assistant-input-placeholder: #6c86a8;
+        --assistant-send-border: rgba(97, 158, 210, 0.5);
+        --assistant-send-bg: linear-gradient(145deg, #8bd6ff, #58b7e7 58%, #358bc0);
+        --assistant-send-ink: #06253c;
+        --assistant-send-shadow: 0 10px 20px rgba(50, 126, 188, 0.28);
+        --assistant-caption: #4f6c8d;
+
+        --guest-canvas-flare-1: rgba(208, 149, 86, 0.2);
+        --guest-canvas-flare-2: rgba(106, 176, 221, 0.18);
+        --guest-kicker: #8f5e2d;
+        --guest-headline: #5d3a23;
+        --guest-logo-shadow: drop-shadow(0 14px 24px rgba(56, 85, 124, 0.2));
+        --guest-primary-ink: #2b1908;
+        --guest-primary-bg: linear-gradient(160deg, #f6d8a6, #eab977 54%, #c17f3d);
+        --guest-primary-border: rgba(240, 199, 142, 0.84);
+        --guest-primary-shadow: 0 12px 22px rgba(177, 112, 46, 0.2);
+        --guest-secondary-border: rgba(171, 132, 80, 0.42);
+        --guest-feature-border: rgba(187, 142, 81, 0.28);
+        --guest-feature-bg: linear-gradient(155deg, rgba(255, 255, 255, 0.9), rgba(236, 244, 255, 0.84));
+        --guest-star: #b77638;
+        --guest-panel-border: rgba(187, 142, 81, 0.3);
+        --guest-panel-bg: linear-gradient(170deg, rgba(255, 255, 255, 0.92), rgba(241, 248, 255, 0.88));
+        --guest-panel-shadow: 0 20px 36px rgba(66, 95, 130, 0.16);
+        --guest-panel-title: #704726;
+        --guest-orb-shadow: 0 24px 46px rgba(38, 67, 104, 0.24);
+        --guest-orb-title: #25405f;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) body.landing-guest {
+          color-scheme: dark;
+          --bg-1: #040a14;
+          --bg-2: #071a2c;
+          --flare-1: rgba(204, 137, 64, 0.24);
+          --flare-2: rgba(86, 166, 216, 0.22);
+          --ink: #e7eef8;
+          --muted: #a6bad0;
+          --line: rgba(141, 175, 209, 0.24);
+          --panel-bg-1: rgba(8, 22, 37, 0.9);
+          --panel-bg-2: rgba(7, 17, 29, 0.78);
+          --brand: #f4e3c8;
+          --eyebrow: #9ed2ff;
+          --btn-secondary-bg: rgba(13, 31, 48, 0.78);
+          --btn-secondary-ink: #e6d2b4;
+          --feature-text: #c7d6e8;
+          --feature-line: rgba(209, 161, 93, 0.44);
+          --panel-back-bg: rgba(13, 33, 52, 0.82);
+          --panel-back-border: rgba(205, 157, 91, 0.4);
+          --panel-back-ink: #efd9b8;
+          --field-bg: rgba(7, 21, 35, 0.86);
+          --field-border: rgba(159, 189, 216, 0.34);
+          --field-ink: #ecf4ff;
+          --focus-outline: rgba(131, 201, 255, 0.28);
+          --focus-border: rgba(131, 201, 255, 0.5);
+          --subtle-text: #9eb2c9;
+          --link-ink: #f4c98b;
+          --assistant-form-bg: rgba(4, 15, 27, 0.8);
+          --assistant-form-border: rgba(158, 187, 214, 0.24);
+          --assistant-form-ring: rgba(109, 187, 245, 0.16);
+          --assistant-form-shadow: 0 20px 48px rgba(1, 7, 15, 0.54);
+          --assistant-icon-bg: linear-gradient(140deg, rgba(106, 191, 240, 0.3), rgba(106, 191, 240, 0.12), transparent);
+          --assistant-icon-ink: #e6f4ff;
+          --assistant-input-bg: rgba(6, 17, 29, 0.78);
+          --assistant-input-bg-focus: rgba(7, 21, 35, 0.9);
+          --assistant-input-ink: #eaf3ff;
+          --assistant-input-placeholder: #89a2be;
+          --assistant-send-border: rgba(164, 204, 235, 0.44);
+          --assistant-send-bg: linear-gradient(145deg, #88cfff, #4f9fd2 58%, #2b6588);
+          --assistant-send-ink: #eaf6ff;
+          --assistant-send-shadow: 0 12px 24px rgba(17, 79, 120, 0.36);
+          --assistant-caption: #93abc6;
+
+          --guest-canvas-flare-1: rgba(208, 149, 86, 0.2);
+          --guest-canvas-flare-2: rgba(106, 176, 221, 0.2);
+          --guest-kicker: #cba776;
+          --guest-headline: #f7e6c8;
+          --guest-logo-shadow: drop-shadow(0 14px 26px rgba(7, 16, 28, 0.42));
+          --guest-primary-ink: #201102;
+          --guest-primary-bg: linear-gradient(160deg, #f0d2a0, #e7b572 54%, #bf7a38);
+          --guest-primary-border: rgba(252, 229, 190, 0.72);
+          --guest-primary-shadow: 0 12px 22px rgba(177, 112, 46, 0.25);
+          --guest-secondary-border: rgba(205, 157, 91, 0.38);
+          --guest-feature-border: rgba(205, 157, 91, 0.24);
+          --guest-feature-bg: linear-gradient(155deg, rgba(12, 28, 44, 0.72), rgba(8, 18, 30, 0.62));
+          --guest-star: #f4c98b;
+          --guest-panel-border: rgba(205, 157, 91, 0.25);
+          --guest-panel-bg: linear-gradient(170deg, rgba(11, 26, 43, 0.9), rgba(8, 18, 30, 0.84));
+          --guest-panel-shadow: 0 22px 44px rgba(1, 7, 15, 0.45);
+          --guest-panel-title: #f5dfbe;
+          --guest-orb-shadow: 0 26px 54px rgba(2, 8, 17, 0.46);
+          --guest-orb-title: #d7e6f8;
+        }
+      }
+
+      :root[data-theme="dark"] body.landing-guest,
+      html.dark body.landing-guest {
+        color-scheme: dark;
+        --bg-1: #040a14;
+        --bg-2: #071a2c;
+        --flare-1: rgba(204, 137, 64, 0.24);
+        --flare-2: rgba(86, 166, 216, 0.22);
+        --ink: #e7eef8;
+        --muted: #a6bad0;
+        --line: rgba(141, 175, 209, 0.24);
+        --panel-bg-1: rgba(8, 22, 37, 0.9);
+        --panel-bg-2: rgba(7, 17, 29, 0.78);
+        --brand: #f4e3c8;
+        --eyebrow: #9ed2ff;
+        --btn-secondary-bg: rgba(13, 31, 48, 0.78);
+        --btn-secondary-ink: #e6d2b4;
+        --feature-text: #c7d6e8;
+        --feature-line: rgba(209, 161, 93, 0.44);
+        --panel-back-bg: rgba(13, 33, 52, 0.82);
+        --panel-back-border: rgba(205, 157, 91, 0.4);
+        --panel-back-ink: #efd9b8;
+        --field-bg: rgba(7, 21, 35, 0.86);
+        --field-border: rgba(159, 189, 216, 0.34);
+        --field-ink: #ecf4ff;
+        --focus-outline: rgba(131, 201, 255, 0.28);
+        --focus-border: rgba(131, 201, 255, 0.5);
+        --subtle-text: #9eb2c9;
+        --link-ink: #f4c98b;
+        --assistant-form-bg: rgba(4, 15, 27, 0.8);
+        --assistant-form-border: rgba(158, 187, 214, 0.24);
+        --assistant-form-ring: rgba(109, 187, 245, 0.16);
+        --assistant-form-shadow: 0 20px 48px rgba(1, 7, 15, 0.54);
+        --assistant-icon-bg: linear-gradient(140deg, rgba(106, 191, 240, 0.3), rgba(106, 191, 240, 0.12), transparent);
+        --assistant-icon-ink: #e6f4ff;
+        --assistant-input-bg: rgba(6, 17, 29, 0.78);
+        --assistant-input-bg-focus: rgba(7, 21, 35, 0.9);
+        --assistant-input-ink: #eaf3ff;
+        --assistant-input-placeholder: #89a2be;
+        --assistant-send-border: rgba(164, 204, 235, 0.44);
+        --assistant-send-bg: linear-gradient(145deg, #88cfff, #4f9fd2 58%, #2b6588);
+        --assistant-send-ink: #eaf6ff;
+        --assistant-send-shadow: 0 12px 24px rgba(17, 79, 120, 0.36);
+        --assistant-caption: #93abc6;
+
+        --guest-canvas-flare-1: rgba(208, 149, 86, 0.2);
+        --guest-canvas-flare-2: rgba(106, 176, 221, 0.2);
+        --guest-kicker: #cba776;
+        --guest-headline: #f7e6c8;
+        --guest-logo-shadow: drop-shadow(0 14px 26px rgba(7, 16, 28, 0.42));
+        --guest-primary-ink: #201102;
+        --guest-primary-bg: linear-gradient(160deg, #f0d2a0, #e7b572 54%, #bf7a38);
+        --guest-primary-border: rgba(252, 229, 190, 0.72);
+        --guest-primary-shadow: 0 12px 22px rgba(177, 112, 46, 0.25);
+        --guest-secondary-border: rgba(205, 157, 91, 0.38);
+        --guest-feature-border: rgba(205, 157, 91, 0.24);
+        --guest-feature-bg: linear-gradient(155deg, rgba(12, 28, 44, 0.72), rgba(8, 18, 30, 0.62));
+        --guest-star: #f4c98b;
+        --guest-panel-border: rgba(205, 157, 91, 0.25);
+        --guest-panel-bg: linear-gradient(170deg, rgba(11, 26, 43, 0.9), rgba(8, 18, 30, 0.84));
+        --guest-panel-shadow: 0 22px 44px rgba(1, 7, 15, 0.45);
+        --guest-panel-title: #f5dfbe;
+        --guest-orb-shadow: 0 26px 54px rgba(2, 8, 17, 0.46);
+        --guest-orb-title: #d7e6f8;
+      }
+
+      .landing-guest {
+        background:
+          radial-gradient(85rem 48rem at 5% 0%, var(--guest-canvas-flare-1), transparent 62%),
+          radial-gradient(70rem 46rem at 100% 8%, var(--guest-canvas-flare-2), transparent 58%),
+          linear-gradient(162deg, var(--bg-1), var(--bg-2));
+        color: var(--ink);
+        font-family: "Manrope", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .landing-guest .brand {
+        font-family: "Sora", "Manrope", ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: 0.03em;
+      }
+
+      .landing-guest .page {
+        width: min(1280px, 96vw);
+      }
+
+      .landing-guest .hero {
+        grid-template-columns: minmax(0, 1.08fr) minmax(20rem, 0.92fr);
+        gap: clamp(1rem, 1.8vw, 1.7rem);
+        align-items: stretch;
+      }
+
+      .landing-guest .intro {
+        padding: 0.2rem 0.25rem 0.1rem;
+      }
+
+      .landing-guest .auth-panel-stack {
+        min-height: clamp(26rem, 56vh, 33rem);
+      }
+
+      .landing-guest .auth-panel-view {
+        max-width: 39rem;
+        justify-content: flex-start;
+        gap: 0.95rem;
+      }
+
+      .landing-guest .intro-info-view {
+        gap: 1rem;
+        max-width: 58rem;
+      }
+
+      .landing-guest .intro-kicker {
+        margin: 0;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--guest-kicker);
+      }
+
+      .landing-guest .intro-preview-image {
+        width: min(100%, 17rem);
+        margin: 0.2rem auto 0.3rem;
+        filter: var(--guest-logo-shadow);
+      }
+
+      .landing-guest .intro-headline {
+        font-family: "Fraunces", "Sora", ui-serif, Georgia, serif;
+        font-size: clamp(1.55rem, 2.45vw, 2.25rem);
+        line-height: 1.12;
+        letter-spacing: 0.01em;
+        color: var(--guest-headline);
+        text-wrap: balance;
+      }
+
+      .landing-guest .lede {
+        max-width: 60ch;
+        color: var(--muted);
+        font-size: 1.01rem;
+      }
+
+      .landing-guest .btn-primary {
+        color: var(--guest-primary-ink);
+        background: var(--guest-primary-bg);
+        border-color: var(--guest-primary-border);
+        box-shadow: var(--guest-primary-shadow);
+      }
+
+      .landing-guest .btn-secondary {
+        border-color: var(--guest-secondary-border);
+      }
+
+      .landing-guest .feature-list {
+        margin-top: 0.9rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.6rem;
+      }
+
+      .landing-guest .feature-list li {
+        position: relative;
+        border: 1px solid var(--guest-feature-border);
+        border-radius: 0.72rem;
+        border-left-width: 1px;
+        padding: 0.6rem 0.7rem 0.6rem 1.45rem;
+        background: var(--guest-feature-bg);
+        color: var(--feature-text);
+      }
+
+      .landing-guest .feature-list li::before {
+        content: "★";
+        position: absolute;
+        left: 0.5rem;
+        top: 0.58rem;
+        font-size: 0.58rem;
+        color: var(--guest-star);
+      }
+
+      .landing-guest .login-panel,
+      .landing-guest .signup-panel {
+        border: 1px solid var(--guest-panel-border);
+        border-radius: 1rem;
+        background: var(--guest-panel-bg);
+        padding: clamp(1rem, 2.2vw, 1.45rem);
+        box-shadow: var(--guest-panel-shadow);
+      }
+
+      .landing-guest .login-panel h2,
+      .landing-guest .signup-panel h2 {
+        font-family: "Fraunces", "Sora", ui-serif, Georgia, serif;
+        font-weight: 600;
+        color: var(--guest-panel-title);
+      }
+
+      .landing-guest .orb-panel {
+        box-shadow: var(--guest-orb-shadow);
+      }
+
+      .landing-guest .orb-panel h2 {
+        color: var(--guest-orb-title);
+      }
+
+      .assistant-widget-mode .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .assistant-widget-mode .orb-panel {
+        display: none;
+      }
+
+      @media (max-width: 920px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .auth-panel-stack {
+          min-height: clamp(25rem, 58vh, 35rem);
+        }
+
+        .orb-frame {
+          min-height: 16rem;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .page {
+          width: min(1120px, 92vw);
+          padding-top: 1rem;
+        }
+
+        .site-header {
+          margin-bottom: 1.4rem;
+        }
+
+        .header-actions .btn {
+          width: auto;
+        }
+
+        .intro {
+          padding: 1rem;
+        }
+
+        .auth-panel-stack {
+          min-height: auto;
+        }
+
+        .auth-panel-view {
+          max-width: 100%;
+          justify-content: flex-start;
+        }
+
+        .btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 1280px) {
+        .landing-guest .feature-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 860px) {
+        .landing-guest .feature-list {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body class="assistant-widget-mode {% if is_authenticated %}landing-authed{% else %}landing-guest{% endif %}">
+    <div class="page">
+      <header class="site-header">
+        <div class="brand">cavazos.ai</div>
+        {% if is_authenticated %}
+        <div class="header-actions">
+          <form class="header-logout-form" action="{% url 'portal:ajax-logout' %}" method="post">
+            {% csrf_token %}
+            <button class="header-logout-btn image-action-btn" type="submit" aria-label="Logout">
+              <img src="{% static 'logout.png' %}" alt="Logout" loading="lazy" decoding="async" />
+            </button>
+          </form>
+        </div>
+        {% endif %}
+      </header>
+
+      <main class="hero">
+        <section class="intro" id="platform-info" aria-label="Intro">
+          <div class="auth-panel-stack">
+            <div
+              id="introPanel"
+              class="auth-panel-view is-active {% if not is_authenticated %}intro-info-view{% endif %}"
+              aria-hidden="false"
+            >
+              {% if messages %}
+              <ul class="auth-message-list" aria-label="Status messages">
+                {% for message in messages %}
+                <li class="auth-message {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+
+              {% if is_authenticated %}
+              <span class="eyebrow">Portal Access</span>
+              <div class="dashboard-header">
+                <h1>Project Navigation</h1>
+                {% if user.is_superuser %}
+                <span class="role-chip">Admin</span>
+                <a class="admin-utility-link" href="{% url 'portal:media-gallery' %}">Shared media gallery</a>
+                {% elif user.is_staff %}
+                <span class="role-chip">Staff</span>
+                {% else %}
+                <span class="role-chip">Client</span>
+                {% endif %}
+              </div>
+              <p class="lede">Select a project to view monitored resources and details.</p>
+
+              <div class="project-nav">
+                {% if user.is_superuser %}
+                <form class="inline-form" action="{% url 'portal:project-create' %}" method="post">
+                  {% csrf_token %}
+                  <div class="inline-form-row">
+                    <input
+                      class="inline-input"
+                      type="text"
+                      name="name"
+                      maxlength="160"
+                      required
+                      placeholder="Create project (name)"
+                    />
+                    <button class="btn btn-primary" type="submit">Create</button>
+                  </div>
+                </form>
+                {% endif %}
+
+                {% if projects %}
+                <div class="project-tree" aria-label="Projects navigation tree">
+                  {% for project in projects %}
+                  <details class="wiki-tree-node wiki-tree-node--folder">
+                    <summary class="wiki-tree-node__summary">
+                      <span class="folder-icon">PRJ</span>
+                      <span class="wiki-tree-node__label">{{ project.name }}</span>
+                      <span class="wiki-tree-node__count">{{ project.resources.all|length }}</span>
+                      <a
+                        class="wiki-tree-node__action"
+                        href="{% url 'portal:project-overview' project_slug=project.slug %}"
+                        onclick="event.stopPropagation();"
+                        >Open</a
+                      >
+                    </summary>
+                    <div class="wiki-tree-node__children">
+                      {% for resource in project.resources.all %}
+                      <a
+                        class="wiki-tree-page"
+                        href="{% url 'portal:resource-detail-slug' project_slug=project.slug resource_slug=resource.slug %}"
+                      >
+                        <span class="folder-icon">RES</span>
+                        <span class="wiki-tree-page__label">{{ resource.name }}</span>
+                        <span class="wiki-tree-page__meta">{{ resource.resource_type|upper }}</span>
+                      </a>
+                      {% empty %}
+                      <div class="wiki-tree-page wiki-tree-page--muted">
+                        <span class="folder-icon">RES</span>
+                        <span class="wiki-tree-page__label">No resources yet</span>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </details>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <p class="project-empty">
+                  No projects are available for your account yet.
+                  {% if user.is_superuser %}
+                  Create your first project above.
+                  {% else %}
+                  Ask an administrator to add you to a project.
+                  {% endif %}
+                </p>
+                {% endif %}
+              </div>
+              {% else %}
+              <img
+                src="{% static 'logo.png' %}"
+                alt="Portal login preview"
+                class="intro-preview-image"
+                loading="lazy"
+              />
+              <p class="intro-kicker">Ai-Powered Infrastructure Monitoring Platform</p>
+              <span class="eyebrow">Live Intelligence</span>
+              <h2 class="intro-headline">Wrangle bugs in your code before they run wild.</h2>
+              <p class="lede">
+                Monitor your cloud resources from one calm control room with clear health views, live logs, and alert
+                controls.
+              </p>
+              <div class="actions">
+                <button class="image-action-btn login-image-btn" id="openLoginBtn" type="button" aria-label="Login">
+                  <img src="{% static 'login.png' %}" alt="Login" loading="lazy" decoding="async" />
+                </button>
+                <button
+                  class="image-action-btn info-image-link"
+                  id="toggleFeatureListBtn"
+                  type="button"
+                  aria-label="Toggle highlights"
+                  aria-controls="featureList"
+                  aria-expanded="false"
+                >
+                  <img src="{% static 'info-icon.png' %}" alt="Info" loading="lazy" decoding="async" />
+                </button>
+              </div>
+
+              <ul class="feature-list is-collapsed" id="featureList" aria-label="Highlights" aria-hidden="true">
+                <li>Project and resource visibility in one operational view.</li>
+                <li>Resource logs organized by level for fast triage.</li>
+                <li>Alert controls that escalate real incidents quickly.</li>
+              </ul>
+              {% endif %}
+            </div>
+
+            {% if not is_authenticated %}
+            <div id="loginPanel" class="login-panel auth-panel-view" aria-hidden="true">
+              <div class="panel-top">
+                <button class="panel-back" id="loginBackTopBtn" type="button" aria-label="Back to information">
+                  ← Back
+                </button>
+                <span class="eyebrow">Client Access</span>
+              </div>
+              <h2>Sign in to your portal</h2>
+              <p class="login-lede">
+                Use your credentials to open resource status, logs, and alert configuration controls.
+              </p>
+              <form id="inlineLoginForm" class="login-form" action="{% url 'portal:ajax-login' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next_url }}" />
+
+                <label class="login-label" for="id_username">
+                  Username or email
+                  <input class="login-input" id="id_username" name="username" autocomplete="username" required />
+                </label>
+
+                <label class="login-label" for="id_password">
+                  Password
+                  <input
+                    class="login-input"
+                    id="id_password"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                  />
+                </label>
+
+                <div class="login-actions">
+                  <button class="btn btn-primary" id="loginSubmitBtn" type="submit">Submit</button>
+                  <button class="btn btn-secondary" id="showSignupBtn" type="button">Sign Up</button>
+                </div>
+
+                <div class="auth-divider"><span>OR</span></div>
+                {% if microsoft_login_available %}
+                <a class="microsoft-btn" href="{{ microsoft_login_url }}">
+                  <span class="microsoft-logo" aria-hidden="true">
+                    <i></i><i></i><i></i><i></i>
+                  </span>
+                  Admin Sign in with Microsoft
+                </a>
+                {% else %}
+                <button class="microsoft-btn" type="button" disabled aria-disabled="true">
+                  <span class="microsoft-logo" aria-hidden="true">
+                    <i></i><i></i><i></i><i></i>
+                  </span>
+                  Admin Sign in with Microsoft
+                </button>
+                <p class="login-hint">Microsoft login is temporarily unavailable. Configure SocialApp in Django admin.</p>
+                {% endif %}
+
+                <p id="loginError" class="login-error" role="alert" hidden></p>
+              </form>
+            </div>
+
+            <div id="signupPanel" class="signup-panel auth-panel-view" aria-hidden="true">
+              <div class="panel-top">
+                <button class="panel-back" id="signupBackTopBtn" type="button" aria-label="Back to information">
+                  ← Back
+                </button>
+                <span class="eyebrow">Create Account</span>
+              </div>
+              <h2>Sign up for portal access</h2>
+              <p class="login-lede">
+                Create your account to access infrastructure status, logs, and emergency alert controls.
+              </p>
+              <form id="inlineSignupForm" class="login-form" action="{% url 'portal:ajax-signup' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next_url }}" />
+
+                <label class="login-label" for="id_signup_username">
+                  Username
+                  <input
+                    class="login-input"
+                    id="id_signup_username"
+                    name="username"
+                    autocomplete="username"
+                    required
+                  />
+                </label>
+
+                <label class="login-label" for="id_signup_email">
+                  Email
+                  <input class="login-input" id="id_signup_email" name="email" type="email" autocomplete="email" required />
+                </label>
+
+                <label class="login-label" for="id_signup_password">
+                  Password
+                  <input
+                    class="login-input"
+                    id="id_signup_password"
+                    name="password"
+                    type="password"
+                    autocomplete="new-password"
+                    required
+                  />
+                </label>
+
+                <label class="login-label" for="id_signup_password_confirm">
+                  Confirm Password
+                  <input
+                    class="login-input"
+                    id="id_signup_password_confirm"
+                    name="password_confirm"
+                    type="password"
+                    autocomplete="new-password"
+                    required
+                  />
+                </label>
+
+                <div class="login-actions">
+                  <button class="btn btn-primary" id="signupSubmitBtn" type="submit">Submit</button>
+                  <button class="btn btn-secondary" id="showLoginFromSignupBtn" type="button">Back to Login</button>
+                </div>
+
+                <p id="signupError" class="login-error" role="alert" hidden></p>
+                <p class="auth-switch">
+                  Already have an account?
+                  <button class="auth-link" id="showLoginInlineBtn" type="button">Sign in</button>
+                </p>
+              </form>
+            </div>
+            {% endif %}
+          </div>
+        </section>
+
+        <aside class="orb-panel" id="orb-preview" aria-label="Orb preview">
+          <h2>Hi. How may I assist you?</h2>
+          <div class="orb-frame">
+            <div id="landingOrbContainer" aria-hidden="true"></div>
+          </div>
+          <div>
+            <p id="portalAssistantReply" aria-live="polite" class="sr-only"></p>
+            <form
+              id="portalAssistantForm"
+              autocomplete="off"
+              class="assistant-form"
+            >
+              <span aria-hidden="true" class="assistant-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5">
+                  <path
+                    fill="currentColor"
+                    d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20m0 3a1.25 1.25 0 0 1 1.25 1.25v5.1a1.25 1.25 0 1 1-2.5 0v-5.1A1.25 1.25 0 0 1 12 5m0 13.25a1.5 1.5 0 1 1 .001-3.001A1.5 1.5 0 0 1 12 18.25"
+                  />
+                </svg>
+              </span>
+              <input
+                id="portalAssistantInput"
+                type="text"
+                inputmode="text"
+                maxlength="500"
+                placeholder="Ask the portal assistant..."
+                aria-label="Chat with portal assistant"
+                class="assistant-input"
+              />
+              <button
+                id="portalAssistantSend"
+                type="submit"
+                aria-label="Send portal assistant message"
+                title="Send"
+                class="assistant-send"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M3.4 3.52a1 1 0 0 1 1.08-.2l15.96 6.98a1.2 1.2 0 0 1 0 2.2L4.48 19.48a1 1 0 0 1-1.38-1.06l1.27-5.6a1 1 0 0 1 .74-.75l7.5-1.82l-7.5-1.82a1 1 0 0 1-.74-.75z"
+                  />
+                </svg>
+              </button>
+            </form>
+            <p class="assistant-caption">Portal assistant preview mode.</p>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="footer">© <span id="year"></span> cavazos.ai</footer>
+    </div>
+
+    <script>
+      (() => {
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        const openLoginBtn = document.getElementById("openLoginBtn");
+        const introPanel = document.getElementById("introPanel");
+        const loginPanel = document.getElementById("loginPanel");
+        const signupPanel = document.getElementById("signupPanel");
+        const loginBackTopBtn = document.getElementById("loginBackTopBtn");
+        const signupBackTopBtn = document.getElementById("signupBackTopBtn");
+        const showSignupBtn = document.getElementById("showSignupBtn");
+        const showLoginFromSignupBtn = document.getElementById("showLoginFromSignupBtn");
+        const showLoginInlineBtn = document.getElementById("showLoginInlineBtn");
+        const toggleFeatureListBtn = document.getElementById("toggleFeatureListBtn");
+        const featureList = document.getElementById("featureList");
+        const loginForm = document.getElementById("inlineLoginForm");
+        const signupForm = document.getElementById("inlineSignupForm");
+        const loginSubmitBtn = document.getElementById("loginSubmitBtn");
+        const signupSubmitBtn = document.getElementById("signupSubmitBtn");
+        const loginError = document.getElementById("loginError");
+        const signupError = document.getElementById("signupError");
+        const usernameInput = document.getElementById("id_username");
+        const signupUsernameInput = document.getElementById("id_signup_username");
+        const socialLoginError = "{{ social_login_error|escapejs }}";
+        const loginCsrfTokenInput = loginForm?.querySelector("input[name='csrfmiddlewaretoken']");
+        const signupCsrfTokenInput = signupForm?.querySelector("input[name='csrfmiddlewaretoken']");
+
+        if (
+          !openLoginBtn ||
+          !introPanel ||
+          !loginPanel ||
+          !signupPanel ||
+          !loginBackTopBtn ||
+          !signupBackTopBtn ||
+          !showSignupBtn ||
+          !showLoginFromSignupBtn ||
+          !showLoginInlineBtn ||
+          !loginForm ||
+          !signupForm ||
+          !loginSubmitBtn ||
+          !signupSubmitBtn
+        ) {
+          return;
+        }
+
+        const panelViews = [introPanel, loginPanel, signupPanel].filter(Boolean);
+
+        const setFeatureListExpanded = (expanded) => {
+          if (!featureList || !toggleFeatureListBtn) return;
+          const isExpanded = Boolean(expanded);
+          featureList.classList.toggle("is-collapsed", !isExpanded);
+          featureList.setAttribute("aria-hidden", isExpanded ? "false" : "true");
+          toggleFeatureListBtn.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+        };
+
+        const clearError = (errorElement) => {
+          if (!errorElement) return;
+          errorElement.hidden = true;
+          errorElement.textContent = "";
+        };
+
+        const setActivePanel = (activePanel) => {
+          panelViews.forEach((panel) => {
+            const isActive = panel === activePanel;
+            panel.classList.toggle("is-active", isActive);
+            panel.setAttribute("aria-hidden", isActive ? "false" : "true");
+          });
+        };
+
+        const showInfoPanel = () => {
+          setActivePanel(introPanel);
+          setFeatureListExpanded(false);
+          loginForm.reset();
+          signupForm.reset();
+          clearError(loginError);
+          clearError(signupError);
+        };
+
+        if (socialLoginError) {
+          setActivePanel(loginPanel);
+          if (loginError) {
+            loginError.hidden = false;
+            loginError.textContent = socialLoginError;
+          }
+        }
+
+        const showLoginPanel = () => {
+          setActivePanel(loginPanel);
+          clearError(loginError);
+          clearError(signupError);
+          usernameInput?.focus();
+        };
+
+        const showSignupPanel = () => {
+          setActivePanel(signupPanel);
+          clearError(loginError);
+          clearError(signupError);
+          signupUsernameInput?.focus();
+        };
+
+        openLoginBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          showLoginPanel();
+        });
+        loginBackTopBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          showInfoPanel();
+        });
+        signupBackTopBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          showInfoPanel();
+        });
+        showSignupBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          showSignupPanel();
+        });
+        showLoginFromSignupBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          showLoginPanel();
+        });
+        showLoginInlineBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          showLoginPanel();
+        });
+        toggleFeatureListBtn?.addEventListener("click", (event) => {
+          event.preventDefault();
+          const isExpanded = toggleFeatureListBtn.getAttribute("aria-expanded") === "true";
+          setFeatureListExpanded(!isExpanded);
+        });
+
+        const submitAuthForm = async ({
+          form,
+          submitButton,
+          errorElement,
+          csrfToken,
+          fallbackRedirect,
+        }) => {
+          clearError(errorElement);
+
+          submitButton.disabled = true;
+          const originalLabel = submitButton.textContent;
+          submitButton.textContent = "Submitting...";
+
+          try {
+            const response = await fetch(form.action, {
+              method: "POST",
+              credentials: "same-origin",
+              headers: {
+                "X-CSRFToken": csrfToken || "",
+                "X-Requested-With": "XMLHttpRequest",
+              },
+              body: new FormData(form),
+            });
+
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok || !payload.ok) {
+              const message = payload.error || "Request failed. Please verify your form input.";
+              if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.hidden = false;
+              }
+              return;
+            }
+
+            window.location.assign(payload.redirect_url || fallbackRedirect);
+          } catch (_error) {
+            if (errorElement) {
+              errorElement.textContent = "Request failed. Please try again.";
+              errorElement.hidden = false;
+            }
+          } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = originalLabel;
+          }
+        };
+
+        loginForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          await submitAuthForm({
+            form: loginForm,
+            submitButton: loginSubmitBtn,
+            errorElement: loginError,
+            csrfToken: loginCsrfTokenInput?.value || "",
+            fallbackRedirect: "{% url 'portal:home' %}",
+          });
+        });
+
+        signupForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          await submitAuthForm({
+            form: signupForm,
+            submitButton: signupSubmitBtn,
+            errorElement: signupError,
+            csrfToken: signupCsrfTokenInput?.value || "",
+            fallbackRedirect: "{% url 'portal:home' %}",
+          });
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("login") === "1" || params.has("next")) {
+          showLoginPanel();
+        }
+      })();
+    </script>
+    {% include "portal/includes/assistant_widget.html" %}
+  </body>
+</html>

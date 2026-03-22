@@ -1,0 +1,1049 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ project.name }} | cavazos.ai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg-1: #edf3fb;
+        --bg-2: #f8fbff;
+        --flare-1: rgba(57, 145, 228, 0.2);
+        --flare-2: rgba(112, 168, 231, 0.22);
+        --ink: #162a44;
+        --muted: #4f6d93;
+        --line: rgba(88, 122, 164, 0.26);
+        --panel-bg-1: rgba(255, 255, 255, 0.9);
+        --panel-bg-2: rgba(236, 245, 255, 0.82);
+        --eyebrow: #2c71b8;
+        --btn-secondary-bg: rgba(233, 243, 255, 0.9);
+        --btn-secondary-hover-bg: rgba(223, 239, 255, 1);
+        --btn-secondary-hover-border: rgba(53, 145, 230, 0.56);
+        --message-border: rgba(88, 122, 164, 0.32);
+        --message-bg: rgba(238, 246, 255, 0.9);
+        --message-ink: #274364;
+        --nav-item-border: rgba(88, 122, 164, 0.22);
+        --nav-item-bg: rgba(238, 247, 255, 0.92);
+        --nav-link-ink: #1f6ba5;
+        --nav-active-border: rgba(53, 145, 230, 0.55);
+        --nav-active-shadow: rgba(53, 145, 230, 0.22);
+        --resource-border: rgba(88, 122, 164, 0.24);
+        --resource-bg: rgba(240, 249, 255, 0.92);
+        --label: #4f6d93;
+        --field-border: rgba(88, 122, 164, 0.4);
+        --field-bg: rgba(255, 255, 255, 0.96);
+        --field-ink: #102742;
+        --field-help: #5e7a9e;
+        --modal-backdrop: rgba(154, 183, 219, 0.36);
+        --modal-bg-1: rgba(255, 255, 255, 0.98);
+        --modal-bg-2: rgba(235, 246, 255, 0.94);
+        --orb-frame-border: rgba(88, 122, 164, 0.24);
+        --orb-frame-bg: #e7f3ff;
+        --assistant-wrap-border: rgba(88, 122, 164, 0.3);
+        --assistant-wrap-bg: rgba(238, 247, 255, 0.95);
+        --footer: #4f6d93;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          color-scheme: dark;
+          --bg-1: #070b14;
+          --bg-2: #061423;
+          --flare-1: rgba(24, 152, 255, 0.2);
+          --flare-2: rgba(15, 89, 144, 0.28);
+          --ink: #dbe8ff;
+          --muted: #9ab0d2;
+          --line: rgba(162, 195, 255, 0.2);
+          --panel-bg-1: rgba(11, 22, 39, 0.92);
+          --panel-bg-2: rgba(8, 16, 30, 0.72);
+          --eyebrow: #9bc8ff;
+          --btn-secondary-bg: rgba(9, 24, 43, 0.68);
+          --btn-secondary-hover-bg: rgba(13, 35, 60, 0.82);
+          --btn-secondary-hover-border: rgba(130, 220, 255, 0.55);
+          --message-border: rgba(143, 173, 217, 0.32);
+          --message-bg: rgba(10, 25, 45, 0.72);
+          --message-ink: #d8e8ff;
+          --nav-item-border: rgba(162, 195, 255, 0.22);
+          --nav-item-bg: rgba(9, 23, 42, 0.62);
+          --nav-link-ink: #a6e8ff;
+          --nav-active-border: rgba(130, 220, 255, 0.55);
+          --nav-active-shadow: rgba(130, 220, 255, 0.22);
+          --resource-border: rgba(162, 195, 255, 0.24);
+          --resource-bg: rgba(8, 20, 37, 0.72);
+          --label: #b6c9e7;
+          --field-border: rgba(162, 195, 255, 0.3);
+          --field-bg: rgba(9, 20, 36, 0.78);
+          --field-ink: #e5efff;
+          --field-help: #88a1c5;
+          --modal-backdrop: rgba(2, 8, 18, 0.74);
+          --modal-bg-1: rgba(11, 22, 39, 0.98);
+          --modal-bg-2: rgba(8, 16, 30, 0.94);
+          --orb-frame-border: rgba(162, 195, 255, 0.24);
+          --orb-frame-bg: #04070f;
+          --assistant-wrap-border: rgba(162, 195, 255, 0.28);
+          --assistant-wrap-bg: rgba(2, 6, 23, 0.62);
+          --footer: #9ab0d2;
+        }
+      }
+
+      :root[data-theme="dark"],
+      html.dark:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg-1: #070b14;
+        --bg-2: #061423;
+        --flare-1: rgba(24, 152, 255, 0.2);
+        --flare-2: rgba(15, 89, 144, 0.28);
+        --ink: #dbe8ff;
+        --muted: #9ab0d2;
+        --line: rgba(162, 195, 255, 0.2);
+        --panel-bg-1: rgba(11, 22, 39, 0.92);
+        --panel-bg-2: rgba(8, 16, 30, 0.72);
+        --eyebrow: #9bc8ff;
+        --btn-secondary-bg: rgba(9, 24, 43, 0.68);
+        --btn-secondary-hover-bg: rgba(13, 35, 60, 0.82);
+        --btn-secondary-hover-border: rgba(130, 220, 255, 0.55);
+        --message-border: rgba(143, 173, 217, 0.32);
+        --message-bg: rgba(10, 25, 45, 0.72);
+        --message-ink: #d8e8ff;
+        --nav-item-border: rgba(162, 195, 255, 0.22);
+        --nav-item-bg: rgba(9, 23, 42, 0.62);
+        --nav-link-ink: #a6e8ff;
+        --nav-active-border: rgba(130, 220, 255, 0.55);
+        --nav-active-shadow: rgba(130, 220, 255, 0.22);
+        --resource-border: rgba(162, 195, 255, 0.24);
+        --resource-bg: rgba(8, 20, 37, 0.72);
+        --label: #b6c9e7;
+        --field-border: rgba(162, 195, 255, 0.3);
+        --field-bg: rgba(9, 20, 36, 0.78);
+        --field-ink: #e5efff;
+        --field-help: #88a1c5;
+        --modal-backdrop: rgba(2, 8, 18, 0.74);
+        --modal-bg-1: rgba(11, 22, 39, 0.98);
+        --modal-bg-2: rgba(8, 16, 30, 0.94);
+        --orb-frame-border: rgba(162, 195, 255, 0.24);
+        --orb-frame-bg: #04070f;
+        --assistant-wrap-border: rgba(162, 195, 255, 0.28);
+        --assistant-wrap-bg: rgba(2, 6, 23, 0.62);
+        --footer: #9ab0d2;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(100rem 70rem at 120% -20%, var(--flare-1), transparent 60%),
+          radial-gradient(90rem 60rem at -15% 100%, var(--flare-2), transparent 55%),
+          linear-gradient(145deg, var(--bg-1), var(--bg-2));
+        color: var(--ink);
+        font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .page {
+        width: min(1180px, 94vw);
+        margin: 0 auto;
+        padding: 1.2rem 0 2rem;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.7rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .brand {
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        font-size: 1.1rem;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 0.72rem;
+        border: 1px solid var(--line);
+        background: var(--btn-secondary-bg);
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 1rem;
+      }
+
+      .icon-btn:hover {
+        border-color: var(--btn-secondary-hover-border);
+        background: var(--btn-secondary-hover-bg);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 1rem;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: linear-gradient(165deg, var(--panel-bg-1), var(--panel-bg-2));
+        padding: 1rem;
+      }
+
+      .panel + .panel {
+        margin-top: 0.8rem;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.42rem;
+        font-size: 0.76rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--eyebrow);
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 999px;
+        background: radial-gradient(circle at 35% 35%, #bdf2ff, #2cb4f0);
+        box-shadow: 0 0 16px rgba(41, 194, 245, 0.62);
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        margin: 0;
+      }
+
+      h1 {
+        margin-top: 0.6rem;
+        font-size: clamp(1.45rem, 2.8vw, 2.1rem);
+      }
+
+      h2 {
+        font-size: 1.02rem;
+      }
+
+      .lede {
+        margin: 0.55rem 0 0;
+        color: var(--muted);
+      }
+
+      .btn,
+      .nav-link,
+      .action-link {
+        border-radius: 0.72rem;
+        border: 1px solid transparent;
+        text-decoration: none;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.86rem;
+        font-weight: 600;
+        padding: 0.52rem 0.78rem;
+      }
+
+      .btn-primary {
+        color: #041625;
+        background: linear-gradient(150deg, #98f0ff, #4ecff4 58%, #2f9fce);
+        border-color: rgba(170, 238, 255, 0.75);
+      }
+
+      .btn-secondary,
+      .nav-link {
+        color: var(--ink);
+        border-color: var(--line);
+        background: var(--btn-secondary-bg);
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .messages {
+        list-style: none;
+        margin: 0 0 0.9rem;
+        padding: 0;
+        display: grid;
+        gap: 0.45rem;
+      }
+
+      .message {
+        border: 1px solid var(--message-border);
+        border-radius: 0.64rem;
+        background: var(--message-bg);
+        color: var(--message-ink);
+        font-size: 0.83rem;
+        padding: 0.5rem 0.62rem;
+      }
+
+      .message.error {
+        border-color: rgba(252, 165, 165, 0.35);
+        background: rgba(69, 10, 10, 0.44);
+        color: #fecaca;
+      }
+
+      .message.success {
+        border-color: rgba(134, 239, 172, 0.35);
+        background: rgba(6, 52, 26, 0.46);
+        color: #bbf7d0;
+      }
+
+      .project-nav {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.52rem;
+      }
+
+      .project-nav-item {
+        border: 1px solid var(--nav-item-border);
+        border-radius: 0.68rem;
+        background: var(--nav-item-bg);
+      }
+
+      .project-nav-item a {
+        display: block;
+        color: var(--nav-link-ink);
+        text-decoration: none;
+        padding: 0.58rem 0.66rem;
+      }
+
+      .project-nav-item.active {
+        border-color: var(--nav-active-border);
+        box-shadow: 0 0 0 1px var(--nav-active-shadow) inset;
+      }
+
+      .resource-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.62rem;
+      }
+
+      .resource-item {
+        border: 1px solid var(--resource-border);
+        border-radius: 0.72rem;
+        background: var(--resource-bg);
+        padding: 0.68rem 0.74rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .resource-item-main {
+        min-width: 0;
+      }
+
+      .resource-link {
+        color: var(--nav-link-ink);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .resource-meta {
+        margin-top: 0.2rem;
+        color: var(--muted);
+        font-size: 0.81rem;
+        overflow-wrap: anywhere;
+      }
+
+      .resource-item-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.42rem;
+        flex-wrap: wrap;
+      }
+
+      .inline-form {
+        margin: 0;
+      }
+
+      .form-grid {
+        display: grid;
+        gap: 0.58rem;
+      }
+
+      .form-row {
+        display: grid;
+        gap: 0.48rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .form-row.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      label {
+        display: grid;
+        gap: 0.36rem;
+        font-size: 0.8rem;
+        color: var(--label);
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--field-border);
+        border-radius: 0.72rem;
+        background: var(--field-bg);
+        color: var(--field-ink);
+        padding: 0.54rem 0.66rem;
+        font: inherit;
+      }
+
+      textarea {
+        min-height: 4.8rem;
+        resize: vertical;
+      }
+
+      .field-help {
+        margin: 0;
+        color: var(--field-help);
+        font-size: 0.77rem;
+      }
+
+      .resource-field-group[hidden] {
+        display: none !important;
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        display: none;
+        place-items: center;
+        padding: 1rem;
+        background: var(--modal-backdrop);
+        backdrop-filter: blur(3px);
+        z-index: 80;
+      }
+
+      .modal-backdrop.is-open {
+        display: grid;
+      }
+
+      .modal-dialog {
+        width: min(920px, 96vw);
+        max-height: calc(100vh - 2rem);
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: linear-gradient(165deg, var(--modal-bg-1), var(--modal-bg-2));
+        padding: 1rem;
+      }
+
+      .modal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+      }
+
+      .modal-close {
+        border-radius: 0.62rem;
+        border: 1px solid var(--line);
+        background: var(--btn-secondary-bg);
+        color: var(--ink);
+        font: inherit;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1;
+        padding: 0.4rem 0.55rem;
+        cursor: pointer;
+      }
+
+      .modal-close:hover {
+        border-color: var(--btn-secondary-hover-border);
+        background: var(--btn-secondary-hover-bg);
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 0.55rem;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+
+      .orb-frame {
+        border-radius: 0.95rem;
+        overflow: hidden;
+        border: 1px solid var(--orb-frame-border);
+        min-height: 17rem;
+        background: var(--orb-frame-bg);
+        position: relative;
+      }
+
+      #landingOrbContainer {
+        position: absolute;
+        inset: 0;
+      }
+
+      #landingOrbContainer canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .assistant-form {
+        margin-top: 0.72rem;
+      }
+
+      .assistant-form .wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.48rem;
+        border-radius: 1rem;
+        border: 1px solid var(--assistant-wrap-border);
+        background: var(--assistant-wrap-bg);
+        padding: 0.5rem;
+      }
+
+      .assistant-form input {
+        border: 0;
+        background: transparent;
+        padding: 0.35rem 0.45rem;
+      }
+
+      .assistant-form button {
+        border-radius: 0.7rem;
+        border: 1px solid rgba(170, 238, 255, 0.75);
+        color: #041625;
+        background: linear-gradient(150deg, #98f0ff, #4ecff4 58%, #2f9fce);
+        font: inherit;
+        font-weight: 600;
+        padding: 0.42rem 0.7rem;
+        cursor: pointer;
+      }
+
+      .footer {
+        margin-top: 1rem;
+        color: var(--footer);
+        font-size: 0.79rem;
+      }
+
+      @media (max-width: 1020px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .form-row,
+        .form-row.three {
+          grid-template-columns: 1fr;
+        }
+
+        .resource-item {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .resource-item-actions {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <div class="brand">cavazos.ai</div>
+        <div class="header-actions">
+          <a class="nav-link" href="{% url 'portal:home' %}">Projects</a>
+          {% if can_manage_project %}
+          <button class="icon-btn" type="button" id="openProjectSettingsModalBtn" title="Project settings" aria-label="Project settings">
+            &#9881;
+          </button>
+          <button class="btn btn-primary" type="button" id="openAddResourceModalBtn">Add Resource</button>
+          {% endif %}
+          <form action="{% url 'portal:ajax-logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-secondary" type="submit">Logout</button>
+          </form>
+        </div>
+      </header>
+
+      {% if messages %}
+      <ul class="messages" aria-label="Status messages">
+        {% for message in messages %}
+        <li class="message {{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <main class="hero">
+        <section>
+          <div class="panel">
+            <span class="eyebrow">Project</span>
+            <h1>{{ project.name }}</h1>
+            <p class="lede">Slug: {{ project.slug }}</p>
+            <div class="actions" style="margin-top: 0.7rem">
+              <a class="nav-link" href="{% url 'portal:home' %}">Back to Project Navigation</a>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Resources</h2>
+            {% if resources %}
+            <ul class="resource-list" style="margin-top: 0.7rem" aria-label="Project resources">
+              {% for resource in resources %}
+              <li class="resource-item">
+                <div class="resource-item-main">
+                  <a class="resource-link" href="{% url 'portal:resource-detail-slug' project_slug=project.slug resource_slug=resource.slug %}">{{ resource.name }}</a>
+                  <div class="resource-meta">
+                    {{ resource.resource_type|upper }} · {{ resource.target }}{% if resource.updated_at %} · Updated {{ resource.updated_at|date:"Y-m-d H:i" }}{% endif %}
+                  </div>
+                </div>
+                <div class="resource-item-actions">
+                  <a class="nav-link" href="{% url 'portal:resource-detail-slug' project_slug=project.slug resource_slug=resource.slug %}">Details</a>
+                  {% if can_manage_project %}
+                  <form
+                    class="inline-form"
+                    action="{% url 'portal:project-resource-delete' project_uuid=project.uuid resource_uuid=resource.uuid %}"
+                    method="post"
+                    onsubmit="return confirm('Delete this resource?');"
+                  >
+                    {% csrf_token %}
+                    <button class="btn btn-secondary" type="submit">Delete</button>
+                  </form>
+                  {% endif %}
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <p class="lede" style="margin-top: 0.6rem">No resources created for this project yet.</p>
+            {% endif %}
+          </div>
+
+          {% if can_manage_project %}
+          <div class="panel">
+            <h2>Manage Access</h2>
+            <form class="form-grid" action="{% url 'portal:project-member-add' project_uuid=project.uuid %}" method="post" style="margin-top: 0.7rem">
+              {% csrf_token %}
+              <label>
+                Add user by username or email
+                <input type="text" name="user_identifier" required maxlength="254" placeholder="username or user@example.com" />
+              </label>
+              <div>
+                <button class="btn btn-primary" type="submit">Add Member</button>
+              </div>
+            </form>
+
+            {% if memberships %}
+            <ul class="project-nav" style="margin-top: 0.85rem" aria-label="Project members">
+              {% for membership in memberships %}
+              <li class="project-nav-item" style="padding: 0.58rem 0.66rem">
+                {{ membership.user.username }}
+                <div class="field-help">{{ membership.user.email|default:"No email" }}</div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+
+          {% endif %}
+        </section>
+
+        <aside>
+          <div class="panel">
+            <h2>Project Navigation</h2>
+            <ul class="project-nav" style="margin-top: 0.68rem">
+              {% for nav_project in projects %}
+              <li class="project-nav-item {% if nav_project.id == project.id %}active{% endif %}">
+                <a href="{% url 'portal:project-overview' project_slug=nav_project.slug %}">{{ nav_project.name }}</a>
+              </li>
+              {% empty %}
+              <li class="project-nav-item"><a href="{% url 'portal:home' %}">No assigned projects</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h2>Hi, I'm Beast. How may I assist you?</h2>
+            <div class="orb-frame" style="margin-top: 0.68rem">
+              <div id="landingOrbContainer" aria-hidden="true"></div>
+            </div>
+            <form class="assistant-form" id="projectAssistantForm" autocomplete="off">
+              <div class="wrapper">
+                <input id="projectAssistantInput" type="text" maxlength="500" placeholder="Ask the portal assistant..." />
+                <button type="submit">Send</button>
+              </div>
+              <p class="field-help" style="margin-top: 0.45rem">Portal assistant preview mode.</p>
+            </form>
+          </div>
+        </aside>
+      </main>
+
+      {% if can_manage_project %}
+      <div id="projectSettingsModal" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="projectSettingsModalTitle">
+          <div class="modal-head">
+            <h2 id="projectSettingsModalTitle">Project Settings</h2>
+            <button class="modal-close" id="closeProjectSettingsModalBtn" type="button" aria-label="Close project settings modal">
+              ×
+            </button>
+          </div>
+          <p class="field-help" style="margin-top: 0.45rem">
+            Project URL: <code>/projects/&lt;slug&gt;/</code>
+          </p>
+
+          <form
+            id="projectSettingsForm"
+            class="form-grid"
+            action="{% url 'portal:project-settings-update' project_uuid=project.uuid %}"
+            method="post"
+            style="margin-top: 0.75rem"
+          >
+            {% csrf_token %}
+            <label>
+              Project Slug
+              <input type="text" name="slug" value="{{ project.slug }}" required maxlength="180" placeholder="project-slug" />
+            </label>
+            <div class="field-help">Lowercase letters, numbers, and hyphens are recommended.</div>
+            <div class="modal-actions">
+              <button class="btn btn-secondary" id="cancelProjectSettingsModalBtn" type="button">Cancel</button>
+              <button class="btn btn-primary" type="submit">Save Project Settings</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="createResourceModal" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="createResourceModalTitle">
+          <div class="modal-head">
+            <h2 id="createResourceModalTitle">Add Resource</h2>
+            <button class="modal-close" id="closeAddResourceModalBtn" type="button" aria-label="Close add resource modal">
+              ×
+            </button>
+          </div>
+          <p class="field-help" style="margin-top: 0.45rem">
+            Supports API, VM, database, queue, service, and other resources. Fill the type-specific fields as needed.
+          </p>
+
+          <form
+            id="createResourceForm"
+            class="form-grid"
+            action="{% url 'portal:project-resource-create' project_uuid=project.uuid %}"
+            method="post"
+            style="margin-top: 0.75rem"
+          >
+            {% csrf_token %}
+
+            <div class="form-row">
+              <label>
+                Name
+                <input type="text" name="name" required maxlength="160" placeholder="Production API" />
+              </label>
+              <label>
+                Resource Type
+                <select id="resourceTypeSelect" name="resource_type" required>
+                  <option value="api">API</option>
+                  <option value="vm">Virtual Machine</option>
+                  <option value="database">Database</option>
+                  <option value="queue">Queue</option>
+                  <option value="service">Service</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label>
+                Resource Slug (optional)
+                <input type="text" name="slug" maxlength="180" placeholder="production-api" />
+              </label>
+            </div>
+
+            <div class="form-row resource-field-group" data-resource-types="queue,service,other">
+              <label>
+                Target (Queue/Service/Other)
+                <input
+                  type="text"
+                  name="target"
+                  maxlength="512"
+                  placeholder="resource target"
+                  data-required-for="queue,service,other"
+                />
+              </label>
+            </div>
+
+            <div class="form-row resource-field-group" data-resource-types="api">
+              <label>
+                Healthcheck URL (API)
+                <input
+                  type="text"
+                  name="healthcheck_url"
+                  maxlength="512"
+                  placeholder="https://api.example.com/health"
+                  data-required-for="api"
+                />
+              </label>
+            </div>
+
+            <div class="form-row resource-field-group" data-resource-types="vm,database">
+              <label>
+                Address (VM/DB)
+                <input
+                  type="text"
+                  name="address"
+                  maxlength="255"
+                  placeholder="10.0.10.25"
+                  data-required-for="vm,database"
+                />
+              </label>
+            </div>
+
+            <div class="form-row three resource-field-group" data-resource-types="database">
+              <label>
+                Port (Database)
+                <input type="text" name="port" maxlength="6" placeholder="5432" />
+              </label>
+              <label>
+                DB Type (Database)
+                <input type="text" name="db_type" maxlength="80" placeholder="postgres" />
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label>
+                GitHub Repositories (comma/newline separated)
+                <textarea name="github_repositories" placeholder="owner/repo-one, owner/repo-two"></textarea>
+              </label>
+            </div>
+
+            <div class="form-row three resource-field-group" data-resource-types="vm">
+              <label>
+                SSH Mode (VM)
+                <select name="ssh_mode">
+                  <option value="">None</option>
+                  <option value="inline">Inline</option>
+                  <option value="saved">Saved</option>
+                </select>
+              </label>
+              <label>
+                SSH Username
+                <input type="text" name="ssh_username" maxlength="160" placeholder="ubuntu" />
+              </label>
+              <label>
+                SSH Port
+                <input type="text" name="ssh_port" maxlength="6" placeholder="22" />
+              </label>
+            </div>
+
+            <div class="form-row three resource-field-group" data-resource-types="vm">
+              <label>
+                SSH Credential ID
+                <input type="text" name="ssh_credential_id" maxlength="255" placeholder="credential-id" />
+              </label>
+              <label>
+                SSH Credential Scope
+                <select name="ssh_scope">
+                  <option value="">None</option>
+                  <option value="account">Account</option>
+                  <option value="global">Global</option>
+                </select>
+              </label>
+              <label>
+                SSH Key Name
+                <input type="text" name="ssh_key_name" maxlength="255" placeholder="prod-key" />
+              </label>
+            </div>
+
+            <label>
+              Notes
+              <textarea name="notes" placeholder="Resource context and runbook notes"></textarea>
+            </label>
+
+            <div class="modal-actions">
+              <button class="btn btn-secondary" id="cancelAddResourceModalBtn" type="button">Cancel</button>
+              <button class="btn btn-primary" type="submit">Create Resource</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+
+      <footer class="footer">© <span id="year"></span> cavazos.ai</footer>
+    </div>
+
+    <script type="module" src="{% static 'landing-orb.js' %}"></script>
+    <script>
+      (() => {
+        document.getElementById("year").textContent = new Date().getFullYear();
+        const assistantForm = document.getElementById("projectAssistantForm");
+        const assistantInput = document.getElementById("projectAssistantInput");
+        const openProjectSettingsModalBtn = document.getElementById("openProjectSettingsModalBtn");
+        const closeProjectSettingsModalBtn = document.getElementById("closeProjectSettingsModalBtn");
+        const cancelProjectSettingsModalBtn = document.getElementById("cancelProjectSettingsModalBtn");
+        const projectSettingsModal = document.getElementById("projectSettingsModal");
+        const projectSettingsForm = document.getElementById("projectSettingsForm");
+        const projectSlugInput = projectSettingsForm?.querySelector("input[name='slug']");
+        const openAddResourceModalBtn = document.getElementById("openAddResourceModalBtn");
+        const closeAddResourceModalBtn = document.getElementById("closeAddResourceModalBtn");
+        const cancelAddResourceModalBtn = document.getElementById("cancelAddResourceModalBtn");
+        const createResourceModal = document.getElementById("createResourceModal");
+        const createResourceForm = document.getElementById("createResourceForm");
+        const resourceTypeSelect = document.getElementById("resourceTypeSelect");
+        const resourceNameInput = createResourceForm?.querySelector("input[name='name']");
+
+        if (createResourceForm && resourceTypeSelect) {
+          const fieldGroups = Array.from(createResourceForm.querySelectorAll(".resource-field-group[data-resource-types]"));
+          const conditionalRequiredFields = Array.from(createResourceForm.querySelectorAll("[data-required-for]"));
+
+          const isTypeMatch = (selectedType, csv) =>
+            String(csv || "")
+              .split(",")
+              .map((value) => value.trim())
+              .filter(Boolean)
+              .includes(selectedType);
+
+          const updateFieldVisibility = () => {
+            const selectedType = resourceTypeSelect.value;
+
+            fieldGroups.forEach((group) => {
+              const shouldShow = isTypeMatch(selectedType, group.dataset.resourceTypes);
+              group.hidden = !shouldShow;
+              group.querySelectorAll("input, select, textarea").forEach((control) => {
+                control.disabled = !shouldShow;
+              });
+            });
+
+            conditionalRequiredFields.forEach((field) => {
+              field.required = isTypeMatch(selectedType, field.dataset.requiredFor);
+            });
+          };
+
+          resourceTypeSelect.addEventListener("change", updateFieldVisibility);
+          updateFieldVisibility();
+        }
+
+        if (projectSettingsModal) {
+          const openProjectSettingsModal = () => {
+            projectSettingsModal.classList.add("is-open");
+            projectSettingsModal.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+            projectSlugInput?.focus();
+          };
+
+          const closeProjectSettingsModal = () => {
+            projectSettingsModal.classList.remove("is-open");
+            projectSettingsModal.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+          };
+
+          closeProjectSettingsModal();
+
+          openProjectSettingsModalBtn?.addEventListener("click", (event) => {
+            event.preventDefault();
+            openProjectSettingsModal();
+          });
+
+          closeProjectSettingsModalBtn?.addEventListener("click", (event) => {
+            event.preventDefault();
+            closeProjectSettingsModal();
+          });
+
+          cancelProjectSettingsModalBtn?.addEventListener("click", (event) => {
+            event.preventDefault();
+            closeProjectSettingsModal();
+          });
+
+          projectSettingsModal.addEventListener("click", (event) => {
+            if (event.target === projectSettingsModal) {
+              closeProjectSettingsModal();
+            }
+          });
+
+          window.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && projectSettingsModal.classList.contains("is-open")) {
+              closeProjectSettingsModal();
+            }
+          });
+        }
+
+        if (createResourceModal) {
+          const openResourceModal = () => {
+            createResourceModal.classList.add("is-open");
+            createResourceModal.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+            resourceNameInput?.focus();
+          };
+
+          const closeResourceModal = () => {
+            createResourceModal.classList.remove("is-open");
+            createResourceModal.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+          };
+
+          closeResourceModal();
+
+          openAddResourceModalBtn?.addEventListener("click", (event) => {
+            event.preventDefault();
+            openResourceModal();
+          });
+
+          closeAddResourceModalBtn?.addEventListener("click", (event) => {
+            event.preventDefault();
+            closeResourceModal();
+          });
+
+          cancelAddResourceModalBtn?.addEventListener("click", (event) => {
+            event.preventDefault();
+            closeResourceModal();
+          });
+
+          createResourceModal.addEventListener("click", (event) => {
+            if (event.target === createResourceModal) {
+              closeResourceModal();
+            }
+          });
+
+          window.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && createResourceModal.classList.contains("is-open")) {
+              closeResourceModal();
+            }
+          });
+        }
+
+        if (!assistantForm || !assistantInput) {
+          return;
+        }
+
+        assistantForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          assistantInput.value = "";
+          assistantInput.focus();
+        });
+      })();
+    </script>
+    {% include "portal/includes/assistant_widget.html" %}
+  </body>
+</html>

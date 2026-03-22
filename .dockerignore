@@ -1,0 +1,12 @@
+.git
+.gitignore
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+*.sqlite3
+orb-chat-ui.zip
+node_modules
+dist
+build

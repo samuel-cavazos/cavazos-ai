@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cavazos.ai | Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./orb-chat-ui.css" />
+  </head>
+  <body>
+    <div id="container" aria-hidden="true"></div>
+    <p id="orbSpeech" aria-hidden="true"></p>
+
+    <div
+      id="chatDock"
+      aria-label="Orb chat input"
+      class="pointer-events-none fixed bottom-4 left-1/2 z-20 w-[min(94vw,48rem)] -translate-x-1/2 sm:bottom-6"
+    >
+      <p id="orbChatReply" aria-live="polite" class="sr-only"></p>
+      <form
+        id="orbChatForm"
+        autocomplete="off"
+        class="pointer-events-auto relative flex items-center gap-2 rounded-[1.35rem] border border-slate-300/20 bg-slate-950/70 p-2.5 shadow-[0_26px_70px_rgba(2,6,23,0.62)] backdrop-blur-xl ring-1 ring-cyan-300/15 transition duration-200 ease-out focus-within:-translate-y-0.5 focus-within:border-cyan-200/60 focus-within:ring-cyan-200/35"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-300/25 via-cyan-300/10 to-transparent text-cyan-100/95"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5">
+            <path
+              fill="currentColor"
+              d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20m0 3a1.25 1.25 0 0 1 1.25 1.25v5.1a1.25 1.25 0 1 1-2.5 0v-5.1A1.25 1.25 0 0 1 12 5m0 13.25a1.5 1.5 0 1 1 .001-3.001A1.5 1.5 0 0 1 12 18.25"
+            />
+          </svg>
+        </span>
+        <input
+          id="orbChatInput"
+          type="text"
+          inputmode="text"
+          maxlength="500"
+          placeholder="Ask the orb..."
+          aria-label="Chat with the orb"
+          class="min-w-0 flex-1 rounded-xl border border-transparent bg-slate-900/35 px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-400 outline-none transition focus:border-cyan-200/50 focus:bg-slate-900/55 focus:ring-2 focus:ring-cyan-200/35"
+        />
+        <button
+          id="orbChatSend"
+          type="submit"
+          aria-label="Send"
+          title="Send"
+          class="group inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-200/45 bg-gradient-to-br from-cyan-300/35 to-sky-700/65 text-cyan-50 shadow-[0_12px_25px_rgba(14,165,233,0.28)] transition hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 disabled:cursor-default disabled:opacity-60 disabled:brightness-90"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M3.4 3.52a1 1 0 0 1 1.08-.2l15.96 6.98a1.2 1.2 0 0 1 0 2.2L4.48 19.48a1 1 0 0 1-1.38-1.06l1.27-5.6a1 1 0 0 1 .74-.75l7.5-1.82l-7.5-1.82a1 1 0 0 1-.74-.75z"
+            />
+          </svg>
+        </button>
+      </form>
+      <p
+        id="orbChatHint"
+        class="px-2 pt-2 text-center text-[0.72rem] font-medium tracking-[0.03em] text-slate-300/80"
+      >
+        Template mode: wire your own submit handler.
+      </p>
+    </div>
+
+    <script type="module" src="./orb-chat-ui.js"></script>
+  </body>
+</html>

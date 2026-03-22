@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cavazos.ai</title>
+    <meta
+      name="description"
+      content="cavazos.ai builds practical AI systems and interfaces for real teams. Explore the orb experience and open the full chat."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-1: #040a14;
+        --bg-2: #071a2c;
+        --ink: #e7eef8;
+        --muted: #a6bad0;
+        --line: rgba(141, 175, 209, 0.24);
+        --accent: #f4c98b;
+        --accent-strong: #bf7a38;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+      }
+
+      body {
+        background:
+          radial-gradient(85rem 48rem at 5% 0%, rgba(208, 149, 86, 0.2), transparent 62%),
+          radial-gradient(70rem 46rem at 100% 8%, rgba(106, 176, 221, 0.2), transparent 58%),
+          linear-gradient(162deg, var(--bg-1), var(--bg-2));
+        color: var(--ink);
+        font-family: "Manrope", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .page {
+        width: min(1280px, 96vw);
+        margin: 0 auto;
+        padding: 1.25rem 0 2.5rem;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1rem;
+        margin-bottom: 2.25rem;
+      }
+
+      .brand {
+        font-family: "Sora", "Manrope", ui-sans-serif, system-ui, sans-serif;
+        font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+        letter-spacing: 0.03em;
+        color: #f4e3c8;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(20rem, 0.92fr);
+        gap: clamp(1rem, 1.8vw, 1.7rem);
+        align-items: stretch;
+      }
+
+      .orb-panel {
+        border: 1px solid var(--line);
+        background: linear-gradient(165deg, rgba(8, 22, 37, 0.9), rgba(7, 17, 29, 0.78));
+        backdrop-filter: blur(8px);
+        border-radius: 1.15rem;
+        box-shadow: 0 26px 54px rgba(2, 8, 17, 0.46);
+        height: 100%;
+      }
+
+      .intro {
+        border: 0;
+        background: transparent;
+        backdrop-filter: none;
+        border-radius: 0;
+        padding: 0.2rem 0.25rem 0.1rem;
+      }
+
+      .intro-kicker {
+        margin: 0;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #cba776;
+      }
+
+      .intro-preview-image {
+        width: min(100%, 17rem);
+        height: auto;
+        display: block;
+        margin: 0.2rem auto 0.3rem;
+        filter: drop-shadow(0 14px 26px rgba(7, 16, 28, 0.42));
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.42rem;
+        font-size: 0.76rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #9ed2ff;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 999px;
+        background: radial-gradient(circle at 35% 35%, #bdf2ff, #2cb4f0);
+        box-shadow: 0 0 16px rgba(41, 194, 245, 0.62);
+      }
+
+      .intro-headline {
+        font-family: "Fraunces", "Sora", ui-serif, Georgia, serif;
+        margin: 0.95rem 0 0.8rem;
+        font-size: clamp(1.55rem, 2.45vw, 2.25rem);
+        line-height: 1.12;
+        letter-spacing: 0.01em;
+        color: #f7e6c8;
+        max-width: none;
+      }
+
+      .lede {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.58;
+        max-width: 60ch;
+        font-size: 1.01rem;
+      }
+
+      .actions {
+        margin-top: 1.25rem;
+        display: flex;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        text-decoration: none;
+        border-radius: 0.82rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.01em;
+        padding: 0.64rem 0.96rem;
+        transition: transform 140ms ease, filter 140ms ease, border-color 140ms ease;
+      }
+
+      .btn-primary {
+        color: #201102;
+        background: linear-gradient(160deg, #f0d2a0, #e7b572 54%, #bf7a38);
+        border: 1px solid rgba(252, 229, 190, 0.72);
+        box-shadow: 0 12px 22px rgba(177, 112, 46, 0.25);
+      }
+
+      .btn-secondary {
+        color: var(--ink);
+        border: 1px solid rgba(205, 157, 91, 0.38);
+        background: rgba(13, 31, 48, 0.78);
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.04);
+      }
+
+      .image-action-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 0.78rem;
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        line-height: 0;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 140ms ease, filter 140ms ease;
+      }
+
+      .image-action-link:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.04);
+      }
+
+      .image-action-link:focus-visible {
+        outline: 2px solid rgba(145, 212, 255, 0.52);
+        outline-offset: 2px;
+      }
+
+      .image-action-link img {
+        display: block;
+        width: clamp(6.8rem, 16vw, 9rem);
+        height: auto;
+      }
+
+      .info-image-link img {
+        width: clamp(2.35rem, 4.6vw, 3.1rem);
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 0.9rem 0 0;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.6rem;
+        max-height: 36rem;
+        overflow: hidden;
+        opacity: 1;
+        transition: max-height 240ms ease, opacity 220ms ease, margin-top 240ms ease;
+      }
+
+      .feature-list.is-collapsed {
+        max-height: 0;
+        margin-top: 0;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .feature-list li {
+        position: relative;
+        border: 1px solid rgba(205, 157, 91, 0.24);
+        border-radius: 0.72rem;
+        border-left-width: 1px;
+        background: linear-gradient(155deg, rgba(12, 28, 44, 0.72), rgba(8, 18, 30, 0.62));
+        color: #c7d6e8;
+        font-size: 0.92rem;
+        padding: 0.6rem 0.7rem 0.6rem 1.45rem;
+      }
+
+      .feature-list li::before {
+        content: "★";
+        position: absolute;
+        left: 0.5rem;
+        top: 0.58rem;
+        font-size: 0.58rem;
+        color: #f4c98b;
+      }
+
+      .orb-panel {
+        padding: 0.95rem;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 0.75rem;
+      }
+
+      .orb-panel h2 {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 600;
+        color: #d7e6f8;
+      }
+
+      .orb-frame {
+        border-radius: 0.95rem;
+        overflow: hidden;
+        border: 1px solid rgba(162, 195, 255, 0.24);
+        min-height: 14rem;
+        background: #04070f;
+        position: relative;
+      }
+
+      #landingOrbContainer {
+        position: absolute;
+        inset: 0;
+      }
+
+      #landingOrbContainer canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .footer {
+        margin-top: 1.4rem;
+        color: #93abc6;
+        font-size: 0.79rem;
+      }
+
+      @media (max-width: 1280px) {
+        .feature-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 860px) {
+        .feature-list {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 920px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .orb-frame {
+          min-height: 16rem;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .page {
+          width: min(1120px, 92vw);
+          padding-top: 1rem;
+        }
+
+        .site-header {
+          margin-bottom: 1.4rem;
+        }
+
+        .intro {
+          padding: 1rem;
+        }
+
+        .btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="brand">cavazos.ai</div>
+      </header>
+
+      <main class="hero">
+        <section class="intro" id="platform-info" aria-label="Intro">
+          <img src="logo.png" alt="Cavazos logo" class="intro-preview-image" loading="lazy" />
+          <p class="intro-kicker">Ai-Powered Infrastructure Monitoring Platform</p>
+          <span class="eyebrow">Live Intelligence</span>
+          <h2 class="intro-headline">Wrangle bugs in your code before they run wild.</h2>
+          <p class="lede">
+            Monitor your cloud resources from one calm control room with clear health views, live logs, and alert
+            controls.
+          </p>
+          <div class="actions">
+            <a class="image-action-link" href="/login" aria-label="Login">
+              <img src="login.png" alt="Login" loading="lazy" decoding="async" />
+            </a>
+            <button
+              class="image-action-link info-image-link"
+              id="toggleFeatureListBtn"
+              type="button"
+              aria-label="Toggle highlights"
+              aria-controls="featureList"
+              aria-expanded="false"
+            >
+              <img src="info-icon.png" alt="Info" loading="lazy" decoding="async" />
+            </button>
+          </div>
+
+          <ul class="feature-list is-collapsed" id="featureList" aria-label="Highlights" aria-hidden="true">
+            <li>Project and resource visibility in one operational view.</li>
+            <li>Resource logs organized by level for fast triage.</li>
+            <li>Alert controls that escalate real incidents quickly.</li>
+          </ul>
+        </section>
+
+        <aside class="orb-panel" id="orb-preview" aria-label="Orb preview">
+          <h2>Hi, I'm Beast. How may I assist you?</h2>
+          <div class="orb-frame">
+            <div id="landingOrbContainer" aria-hidden="true"></div>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="footer">© <span id="year"></span> cavazos.ai</footer>
+    </div>
+
+    <script type="module" src="./landing-orb.js"></script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      (() => {
+        const toggleFeatureListBtn = document.getElementById("toggleFeatureListBtn");
+        const featureList = document.getElementById("featureList");
+        if (!toggleFeatureListBtn || !featureList) return;
+
+        const setExpanded = (expanded) => {
+          const isExpanded = Boolean(expanded);
+          featureList.classList.toggle("is-collapsed", !isExpanded);
+          featureList.setAttribute("aria-hidden", isExpanded ? "false" : "true");
+          toggleFeatureListBtn.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+        };
+
+        toggleFeatureListBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          const isExpanded = toggleFeatureListBtn.getAttribute("aria-expanded") === "true";
+          setExpanded(!isExpanded);
+        });
+      })();
+    </script>
+  </body>
+</html>

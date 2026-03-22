@@ -1,0 +1,1 @@
+Always update the wiki in `./wiki` and check for stale documentation.

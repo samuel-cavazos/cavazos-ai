@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cavazos.ai | Ops Overview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-1: #060b15;
+        --bg-2: #051424;
+        --ink: #dce9ff;
+        --muted: #97a9c9;
+        --line: rgba(151, 190, 245, 0.22);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        background:
+          radial-gradient(90rem 60rem at 110% -10%, rgba(38, 169, 255, 0.18), transparent 55%),
+          radial-gradient(80rem 52rem at -10% 95%, rgba(14, 92, 152, 0.26), transparent 55%),
+          linear-gradient(145deg, var(--bg-1), var(--bg-2));
+        font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .page {
+        width: min(1200px, 94vw);
+        margin: 0 auto;
+        padding: 1.2rem 0 2.4rem;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.1rem;
+      }
+
+      .brand {
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: 0.02em;
+        font-size: 1.05rem;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+
+      .btn {
+        border: 1px solid var(--line);
+        border-radius: 0.78rem;
+        background: rgba(9, 24, 42, 0.75);
+        color: var(--ink);
+        text-decoration: none;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.5rem 0.75rem;
+      }
+
+      .hero {
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: linear-gradient(160deg, rgba(9, 24, 43, 0.9), rgba(8, 16, 30, 0.74));
+        padding: clamp(1rem, 2.8vw, 1.8rem);
+        margin-bottom: 0.9rem;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: #95c7ff;
+        text-transform: uppercase;
+        letter-spacing: 0.11em;
+        font-size: 0.73rem;
+      }
+
+      h1 {
+        margin: 0.35rem 0 0;
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        font-size: clamp(1.35rem, 2.6vw, 2.2rem);
+      }
+
+      .subhead {
+        margin: 0.45rem 0 0;
+        color: var(--muted);
+        max-width: 70ch;
+        line-height: 1.55;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 0.8rem;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 0.95rem;
+        background: rgba(7, 18, 33, 0.7);
+        padding: 0.85rem 0.95rem;
+      }
+
+      .card h2 {
+        margin: 0;
+        font-size: 0.98rem;
+      }
+
+      .metric {
+        margin: 0.55rem 0 0;
+        font-size: 1.35rem;
+        font-weight: 700;
+      }
+
+      .list {
+        margin: 0.65rem 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 0.4rem;
+        color: #bfd1ed;
+        font-size: 0.88rem;
+      }
+
+      .card-wide {
+        grid-column: span 12;
+      }
+
+      .card-half {
+        grid-column: span 6;
+      }
+
+      .card-third {
+        grid-column: span 4;
+      }
+
+      @media (max-width: 920px) {
+        .card-half,
+        .card-third {
+          grid-column: span 12;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">cavazos.ai</div>
+        <div class="top-actions">
+          <a class="btn" href="{% url 'portal:media-gallery' %}">Shared Gallery</a>
+          <a class="btn" href="{% url 'portal:home' %}">Home</a>
+          <form action="{% url 'portal:ajax-logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn" type="submit">Logout</button>
+          </form>
+        </div>
+      </header>
+
+      <section class="hero">
+        <p class="eyebrow">Superuser Operations</p>
+        <h1>Portfolio Intelligence Overview</h1>
+        <p class="subhead">
+          Placeholder dashboard for superuser operations. This page is the first landing destination after Microsoft
+          login and will evolve into live client portfolio monitoring.
+        </p>
+      </section>
+
+      <main class="grid">
+        <section class="card card-third">
+          <h2>Client Portfolios</h2>
+          <p class="metric">24</p>
+          <ul class="list">
+            <li>18 healthy</li>
+            <li>4 warning states</li>
+            <li>2 critical incidents</li>
+          </ul>
+        </section>
+
+        <section class="card card-third">
+          <h2>Alert Activity (24h)</h2>
+          <p class="metric">43</p>
+          <ul class="list">
+            <li>9 emergency alerts</li>
+            <li>21 resolved incidents</li>
+            <li>13 escalations in progress</li>
+          </ul>
+        </section>
+
+        <section class="card card-third">
+          <h2>SSH Access Checks</h2>
+          <p class="metric">97.9%</p>
+          <ul class="list">
+            <li>4 access denials flagged</li>
+            <li>2 expiring credentials</li>
+            <li>0 unknown hosts</li>
+          </ul>
+        </section>
+
+        <section class="card card-half">
+          <h2>Recent Cloud Log Highlights</h2>
+          <ul class="list">
+            <li>AWS-us-east-1: spike in 5xx responses for API-GW-prod.</li>
+            <li>Azure-eastus: VM diagnostics latency above threshold for 11 minutes.</li>
+            <li>GCP-central: pubsub retry queue increasing on billing worker.</li>
+            <li>On-prem edge cluster: packet loss anomaly auto-acknowledged.</li>
+          </ul>
+        </section>
+
+        <section class="card card-half">
+          <h2>Priority Client States</h2>
+          <ul class="list">
+            <li>Atlas Freight: emergency pager escalation active.</li>
+            <li>Northline Health: log parser degraded, failover stable.</li>
+            <li>Kepler Retail: backup verification overdue by 42 minutes.</li>
+            <li>Fountain Labs: all monitored resources nominal.</li>
+          </ul>
+        </section>
+
+        <section class="card card-wide">
+          <h2>Next Build Targets</h2>
+          <ul class="list">
+            <li>Replace placeholder metrics with DB-backed portfolio/resource models.</li>
+            <li>Add incident timeline filters by client and environment.</li>
+            <li>Integrate emergency alert rule management workflow.</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+    {% include "portal/includes/assistant_widget.html" %}
+  </body>
+</html>

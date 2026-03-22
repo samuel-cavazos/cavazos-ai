@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.sqlite3
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+staticfiles/
+
+# Local secrets
+orb-chat-ui/.env
+.env

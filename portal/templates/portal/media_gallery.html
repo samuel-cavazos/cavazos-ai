@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cavazos.ai | Shared Media Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg-1: #edf3fb;
+        --bg-2: #f8fbff;
+        --flare-1: rgba(57, 145, 228, 0.2);
+        --flare-2: rgba(112, 168, 231, 0.22);
+        --ink: #162a44;
+        --muted: #4b6382;
+        --line: rgba(88, 122, 164, 0.26);
+        --panel-bg: rgba(255, 255, 255, 0.88);
+        --panel-bg-strong: rgba(244, 250, 255, 0.96);
+        --input-bg: rgba(255, 255, 255, 0.96);
+        --input-border: rgba(88, 122, 164, 0.38);
+        --focus-ring: rgba(53, 145, 230, 0.32);
+        --focus-border: rgba(53, 145, 230, 0.52);
+        --btn-secondary-bg: rgba(233, 243, 255, 0.9);
+        --btn-secondary-ink: #1b375b;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg-1: #070b14;
+          --bg-2: #061423;
+          --flare-1: rgba(24, 152, 255, 0.22);
+          --flare-2: rgba(15, 89, 144, 0.3);
+          --ink: #dbe8ff;
+          --muted: #95a7c7;
+          --line: rgba(162, 195, 255, 0.18);
+          --panel-bg: rgba(11, 22, 39, 0.84);
+          --panel-bg-strong: rgba(8, 16, 30, 0.8);
+          --input-bg: rgba(9, 20, 36, 0.78);
+          --input-border: rgba(162, 195, 255, 0.3);
+          --focus-ring: rgba(137, 224, 255, 0.38);
+          --focus-border: rgba(137, 224, 255, 0.5);
+          --btn-secondary-bg: rgba(9, 24, 43, 0.68);
+          --btn-secondary-ink: #dbe8ff;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        background:
+          radial-gradient(96rem 60rem at 115% -10%, var(--flare-1), transparent 55%),
+          radial-gradient(90rem 56rem at -10% 95%, var(--flare-2), transparent 55%),
+          linear-gradient(145deg, var(--bg-1), var(--bg-2));
+        font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .page {
+        width: min(1220px, 94vw);
+        margin: 0 auto;
+        padding: 1.2rem 0 2.3rem;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .brand {
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: 0.02em;
+        font-size: 1.06rem;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border-radius: 0.78rem;
+        border: 1px solid var(--line);
+        background: var(--btn-secondary-bg);
+        color: var(--btn-secondary-ink);
+        text-decoration: none;
+        font: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.5rem 0.72rem;
+        cursor: pointer;
+        transition: transform 140ms ease, filter 140ms ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.04);
+      }
+
+      .btn-primary {
+        color: #041625;
+        background: linear-gradient(150deg, #98f0ff, #4ecff4 58%, #2f9fce);
+        border-color: rgba(170, 238, 255, 0.75);
+      }
+
+      .btn-danger {
+        background: rgba(120, 18, 18, 0.82);
+        border-color: rgba(248, 113, 113, 0.45);
+        color: #fee2e2;
+      }
+
+      .btn-small {
+        padding: 0.34rem 0.56rem;
+        font-size: 0.78rem;
+      }
+
+      .layout {
+        display: grid;
+        gap: 0.9rem;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: linear-gradient(160deg, var(--panel-bg), var(--panel-bg-strong));
+        backdrop-filter: blur(8px);
+      }
+
+      .hero {
+        padding: clamp(1rem, 2.6vw, 1.6rem);
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: #2c71b8;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.72rem;
+      }
+
+      h1 {
+        margin: 0.4rem 0 0;
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        font-size: clamp(1.35rem, 2.9vw, 2.2rem);
+      }
+
+      .lede {
+        margin: 0.5rem 0 0;
+        color: var(--muted);
+        line-height: 1.52;
+        max-width: 70ch;
+      }
+
+      .message-list {
+        list-style: none;
+        padding: 0;
+        margin: 0.85rem 0 0;
+        display: grid;
+        gap: 0.46rem;
+      }
+
+      .message {
+        border-radius: 0.68rem;
+        border: 1px solid rgba(143, 173, 217, 0.35);
+        background: rgba(8, 23, 41, 0.75);
+        color: #d8e8ff;
+        font-size: 0.84rem;
+        padding: 0.48rem 0.6rem;
+      }
+
+      .message.error {
+        border-color: rgba(252, 165, 165, 0.35);
+        background: rgba(69, 10, 10, 0.44);
+        color: #fecaca;
+      }
+
+      .message.success {
+        border-color: rgba(134, 239, 172, 0.35);
+        background: rgba(6, 52, 26, 0.46);
+        color: #bbf7d0;
+      }
+
+      .upload-form {
+        margin-top: 0.88rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+      }
+
+      .file-input {
+        flex: 1 1 16rem;
+        border-radius: 0.72rem;
+        border: 1px solid var(--input-border);
+        background: var(--input-bg);
+        color: var(--ink);
+        padding: 0.58rem 0.66rem;
+        font: inherit;
+        font-size: 0.86rem;
+      }
+
+      .file-input:focus {
+        outline: 2px solid var(--focus-ring);
+        border-color: var(--focus-border);
+      }
+
+      .hint {
+        margin: 0.62rem 0 0;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .uploaded-url {
+        margin-top: 0.82rem;
+        padding: 0.72rem;
+        border-radius: 0.85rem;
+        border: 1px solid var(--line);
+        background: rgba(7, 18, 33, 0.2);
+      }
+
+      .uploaded-url label {
+        display: block;
+        font-size: 0.74rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.42rem;
+      }
+
+      .url-copy-row {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .url-copy-row input {
+        flex: 1;
+        min-width: 0;
+        border-radius: 0.66rem;
+        border: 1px solid var(--input-border);
+        background: var(--input-bg);
+        color: var(--ink);
+        padding: 0.48rem 0.58rem;
+        font: inherit;
+        font-size: 0.82rem;
+      }
+
+      .gallery {
+        padding: clamp(0.9rem, 2.2vw, 1.3rem);
+      }
+
+      .gallery-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.7rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .gallery-head h2 {
+        margin: 0;
+        font-size: 1.04rem;
+        font-family: "Sora", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .gallery-count {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .gallery-grid {
+        display: grid;
+        gap: 0.68rem;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      }
+
+      .media-card {
+        border-radius: 0.9rem;
+        border: 1px solid var(--line);
+        background: rgba(7, 18, 33, 0.35);
+        overflow: hidden;
+        display: grid;
+      }
+
+      .media-preview {
+        position: relative;
+        height: 180px;
+        background:
+          linear-gradient(145deg, rgba(75, 139, 194, 0.2), rgba(44, 113, 184, 0.12)),
+          linear-gradient(180deg, rgba(6, 12, 22, 0.95), rgba(11, 22, 39, 0.92));
+        display: grid;
+        place-items: center;
+      }
+
+      .media-preview img,
+      .media-preview video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .media-preview audio {
+        width: calc(100% - 1.2rem);
+      }
+
+      .media-type-pill {
+        border: 1px solid rgba(157, 209, 255, 0.45);
+        border-radius: 999px;
+        padding: 0.33rem 0.62rem;
+        font-size: 0.74rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #d4ebff;
+        background: rgba(5, 25, 49, 0.72);
+      }
+
+      .media-body {
+        padding: 0.72rem;
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .media-title {
+        margin: 0;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .media-meta {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.74rem;
+      }
+
+      .media-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.45rem;
+      }
+
+      .media-actions form {
+        margin: 0;
+      }
+
+      .empty-state {
+        border: 1px dashed var(--line);
+        border-radius: 0.88rem;
+        padding: 1rem;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      @media (max-width: 740px) {
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .top-actions {
+          width: 100%;
+        }
+
+        .top-actions .btn {
+          flex: 1 1 auto;
+          text-align: center;
+        }
+
+        .url-copy-row {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">cavazos.ai</div>
+        <div class="top-actions">
+          <a class="btn" href="{% url 'portal:home' %}">Portal</a>
+          <a class="btn" href="{% url 'portal:ops' %}">Ops</a>
+          <form action="{% url 'portal:ajax-logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn" type="submit">Logout</button>
+          </form>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel hero">
+          <p class="eyebrow">Superuser Shared Media</p>
+          <h1>Shared Media Gallery</h1>
+          <p class="lede">
+            Upload files and copy public links under <code>/shared/</code> for email attachments and web embeds.
+          </p>
+
+          {% if messages %}
+          <ul class="message-list" aria-label="Status messages">
+            {% for message in messages %}
+            <li class="message {{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+
+          <form class="upload-form" action="{% url 'portal:media-gallery-upload' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input class="file-input" type="file" name="media_file" required />
+            <button class="btn btn-primary" type="submit">Upload File</button>
+          </form>
+          <p class="hint">
+            Max upload size: {{ max_upload_size }}. Active-content file types (`.html`, `.js`, `.svg`, scripts, and executables) are blocked.
+          </p>
+
+          {% if uploaded_url %}
+          <div class="uploaded-url">
+            <label for="latestUploadedUrl">Latest uploaded URL</label>
+            <div class="url-copy-row">
+              <input id="latestUploadedUrl" type="text" value="{{ uploaded_url }}" readonly />
+              <button class="btn btn-small" data-copy-target="latestUploadedUrl" type="button">Copy URL</button>
+            </div>
+          </div>
+          {% endif %}
+        </section>
+
+        <section class="panel gallery">
+          <div class="gallery-head">
+            <h2>Stored Files</h2>
+            <span class="gallery-count">{{ media_items|length }} total</span>
+          </div>
+
+          {% if media_items %}
+          <div class="gallery-grid">
+            {% for item in media_items %}
+            <article class="media-card">
+              <div class="media-preview">
+                {% if item.kind == "image" %}
+                <img src="{{ item.path }}" alt="{{ item.name }}" loading="lazy" />
+                {% elif item.kind == "video" %}
+                <video src="{{ item.path }}" controls preload="metadata"></video>
+                {% elif item.kind == "audio" %}
+                <audio src="{{ item.path }}" controls preload="metadata"></audio>
+                {% elif item.kind == "pdf" %}
+                <span class="media-type-pill">PDF</span>
+                {% else %}
+                <span class="media-type-pill">FILE</span>
+                {% endif %}
+              </div>
+              <div class="media-body">
+                <h3 class="media-title" title="{{ item.name }}">{{ item.name }}</h3>
+                <p class="media-meta">{{ item.content_type }} | {{ item.size_display }} | {{ item.modified_at|date:"Y-m-d H:i" }}</p>
+                <div class="url-copy-row">
+                  <input id="assetUrl{{ forloop.counter }}" type="text" value="{{ item.absolute_url }}" readonly />
+                  <button class="btn btn-small" data-copy-target="assetUrl{{ forloop.counter }}" type="button">Copy URL</button>
+                </div>
+                <div class="media-actions">
+                  <a class="btn btn-small" href="{{ item.path }}" target="_blank" rel="noopener">Open</a>
+                  <form action="{% url 'portal:media-gallery-delete' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="filename" value="{{ item.name }}" />
+                    <button
+                      class="btn btn-danger btn-small"
+                      type="submit"
+                      onclick="return confirm('Delete {{ item.name }}? This cannot be undone.')"
+                    >
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">No files uploaded yet. Add one above to generate a public URL.</div>
+          {% endif %}
+        </section>
+      </main>
+    </div>
+
+    <script>
+      (function () {
+        const copyButtons = document.querySelectorAll("[data-copy-target]");
+        copyButtons.forEach((button) => {
+          button.addEventListener("click", async () => {
+            const targetId = button.getAttribute("data-copy-target");
+            const input = targetId ? document.getElementById(targetId) : null;
+            if (!input) {
+              return;
+            }
+            try {
+              await navigator.clipboard.writeText(input.value);
+              const originalText = button.textContent;
+              button.textContent = "Copied";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1400);
+            } catch (error) {
+              input.focus();
+              input.select();
+            }
+          });
+        });
+      })();
+    </script>
+    {% include "portal/includes/assistant_widget.html" %}
+  </body>
+</html>
